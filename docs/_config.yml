@@ -6,25 +6,26 @@ email: sheocjf1025@gmail.com
 description: >
   ""
 baseurl: ""
-# url: "https://www.csrhymes.com"
+url: "https://bolero2.dev"
 permalink: pretty
-#favicon: /path/to/favicon.png
-gh_sponsor: chrisrhymes
+favicon: /favicon.png
+gh_sponsor: bolero2
 #hide_share_buttons: true
 #theme_color: '#eeeeee'
-#fixed_navbar: top
-#direction: one of <ltr, rtl, auto>, default: ltr
+fixed_navbar: top
+# direction: one of <ltr, rtl, auto>, default: ltr
+direction: ltr
 
 paginate: 5
 paginate_path: "/blog/page:num"
-theme: "bulma-clean-theme"
+# theme: "bulma-clean-theme"
 
 # Disqus Comments
 disqus:
   # Leave shortname blank to disable comments site-wide.
   # Disable comments for any post by adding `comments: false` to that post's YAML Front Matter.
   # shortname: my_disqus_shortname
-  shortname: csrhymes
+  shortname: bolero2
 
 
 plugins:
@@ -59,7 +60,7 @@ defaults:
       path: ""
       type: "pages"
     values:
-      show_sidebar: true
+      show_sidebar: false
   -
     scope:
       path: ""
@@ -68,7 +69,9 @@ defaults:
       author: "bolero2"
       layout: post
       image: https://via.placeholder.com/1200x800
-      show_sidebar: true
+      show_sidebar: false     # Latest post 보여줌
+      menubar_toc: true       # 왼쪽에 1. ~~~ , 2. ~~~ 이런거 제목 생기는거
+      toc: true
 
 markdown: kramdown
 highlighter: rouge

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2022-05-14T09:48:15+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">bolero2.log</title><subtitle>&quot;&quot;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2022-05-14T11:22:49+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">bolero2.log</title><subtitle>&quot;&quot;
 </subtitle><entry><title type="html">[Papers] Better plain ViT baselines for ImageNet-1k</title><link href="http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/" rel="alternate" type="text/html" title="[Papers] Better plain ViT baselines for ImageNet-1k" /><published>2022-05-03T00:00:00+09:00</published><updated>2022-05-03T00:00:00+09:00</updated><id>http://localhost:4000/paper/2022/05/03/%5BPapers%5D%20Better%20%20plain%20ViT%20baselines%20for%20ImageNet-1k</id><content type="html" xml:base="http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/"><![CDATA[<h1 id="better--plain-vit-baselines-for-imagenet-1k">Better  plain ViT baselines for ImageNet-1k</h1>
 
 <p>이번에 소개할 논문은 5월 3일 <a href="https://paperswithcode.com">Paperswithcode</a>에 게재된
@@ -111,7 +111,19 @@
 
 <hr />
 
-<p><strong>(Paper Review는 제가 스스로 읽고 작성한 글이므로, 주관적인 내용임을 밝힙니다.)</strong></p>]]></content><author><name>bolero2</name></author><category term="Paper" /><summary type="html"><![CDATA[original ViT로부터 성능을 10%나 증가시킨 방법]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" /><media:content medium="image" url="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">[DL] Semantic Segmentation에서 Label Image 생성하기</title><link href="http://localhost:4000/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="[DL] Semantic Segmentation에서 Label Image 생성하기" /><published>2022-01-15T00:00:00+09:00</published><updated>2022-01-15T00:00:00+09:00</updated><id>http://localhost:4000/deeplearning/2022/01/15/%5BDL%5D-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/"><![CDATA[<h2 id="-0intro-">** 0.Intro **</h2>
+<p><strong>(Paper Review는 제가 스스로 읽고 작성한 글이므로, 주관적인 내용임을 밝힙니다.)</strong></p>]]></content><author><name>bolero2</name></author><category term="Paper" /><summary type="html"><![CDATA[original ViT로부터 성능을 10%나 증가시킨 방법]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" /><media:content medium="image" url="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">[DL] Semantic Segmentation에서 Label Image 생성하기</title><link href="http://localhost:4000/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="[DL] Semantic Segmentation에서 Label Image 생성하기" /><published>2022-01-15T00:00:00+09:00</published><updated>2022-01-15T00:00:00+09:00</updated><id>http://localhost:4000/deeplearning/2022/01/15/%5BDL%5D-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/"><![CDATA[<h1 id="semantic-segmentation에서-label-image-생성하기">Semantic Segmentation에서 Label Image 생성하기</h1>
+
+<p>semantic segmentation은 간단하게 보자면 <em>“<strong>Image</strong>” - “<strong>Image</strong>“</em> 관계의 학습입니다.</p>
+
+<p>X 입력에는 보통 jpg든 png든 읽을 수 있는 Image file이 놓이고,<br />
+Y 입력(정답)에는 보통 png 파일이 옵니다.</p>
+
+<p>이번 포스팅에서는 <em><strong>어떻게 하면 라벨에 해당되는 Image file(.png)를 만들 수 있는지?</strong></em> 살펴보겠습니다.</p>
+
+<hr />
+
+<h2 id="0-intro"><strong>0. Intro</strong></h2>
+
 <p>Semantic Segmentation Task를 학습하는데는 2가지 데이터가 필요합니다:
 <strong><em>(Input) X Data : 학습할 Image dataset
 (Input) Y Data : 학습할 Image에 대응되는 Color Map Image file</em></strong></p>

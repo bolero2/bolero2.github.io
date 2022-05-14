@@ -4,6 +4,7 @@ subtitle: AI Engineer's Archives
 layout: page
 callouts: home_callouts
 show_sidebar: true
+menubar_toc: true
 ---
 
 

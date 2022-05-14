@@ -8,8 +8,19 @@ image: '../img/segmentation_label.png'
 published: true
 ---
 
+# Semantic Segmentation에서 Label Image 생성하기
 
-## ** 0.Intro **
+semantic segmentation은 간단하게 보자면 _"**Image**" - "**Image**"_ 관계의 학습입니다.  
+
+X 입력에는 보통 jpg든 png든 읽을 수 있는 Image file이 놓이고,  
+Y 입력(정답)에는 보통 png 파일이 옵니다.
+
+이번 포스팅에서는 _**어떻게 하면 라벨에 해당되는 Image file(.png)를 만들 수 있는지?**_ 살펴보겠습니다.
+
+-----
+
+## **0. Intro**  
+
 Semantic Segmentation Task를 학습하는데는 2가지 데이터가 필요합니다:
 **_(Input) X Data : 학습할 Image dataset
 (Input) Y Data : 학습할 Image에 대응되는 Color Map Image file_**

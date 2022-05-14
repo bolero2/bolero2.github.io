@@ -6,7 +6,7 @@
 <html
  dir="ltr"
  lang="en"
- >
+ class="has-navbar-fixed-top">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -44,7 +44,7 @@
     <!-- head scripts --></head>
 
   <body>
-    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <nav class="navbar is-primary  is-fixed-top " x-data="{ openNav: false }">
     <div class="container">
         <div class="navbar-brand">
             <a href="/" class="navbar-item">
@@ -62,32 +62,11 @@
                 
                 
                     
-                    <a href="/docs/" class="navbar-item ">Docs</a>
-                    
-                
-                    
-                    <div class="navbar-item has-dropdown is-hoverable ">
-                        <a href="/" class="navbar-link ">Example Pages</a>
-                        <div class="navbar-dropdown">
-                            
-                            <a href="/landing/" class="navbar-item ">Landing Page With Callouts</a>
-                            
-                            <a href="/sponsors/" class="navbar-item ">Sponsors Page</a>
-                            
-                            <a href="/gallery/" class="navbar-item ">Image Gallery</a>
-                            
-                            <a href="/products/" class="navbar-item ">Products</a>
-                            
-                            <a href="/example-recipe/" class="navbar-item ">Recipe Page</a>
-                            
-                            <a href="/showcase/" class="navbar-item ">Showcase</a>
-                            
-                        </div>
-                    </div>
-                    
-                
-                    
                     <a href="/blog/" class="navbar-item ">Blog</a>
+                    
+                
+                    
+                    <a href="https://github.com/bolero2" class="navbar-item ">Github Profile</a>
                     
                 
                 
@@ -95,7 +74,7 @@
 
             <div class="navbar-end">
                 
-                <a class="navbar-item" href="https://github.com/sponsors/chrisrhymes">
+                <a class="navbar-item" href="https://github.com/sponsors/bolero2">
                     <span class="icon gh-sponsor"><i class="fas fa-heart"></i></span>
                     <span>Sponsor</span>
                 </a>
@@ -123,6 +102,33 @@
     <section class="section">
         <div class="container">
             <div class="columns is-multiline">
+                
+                <div class="column is-4-desktop is-4-tablet">
+                    
+                    
+
+<div class="contents">
+    <div class="menu">
+        <p class="menu-label">Contents</p>
+        <ul class="menu-list">
+  <li><a href="#1-abstract">1. Abstract</a></li>
+  <li><a href="#2-model-architecture">2. Model Architecture</a>
+    <ul>
+      <li><a href="#1-convolution-neural-network">1) Convolution Neural Network</a></li>
+      <li><a href="#2-transformer-encoder">2) Transformer Encoder</a></li>
+      <li><a href="#3-transformer-decoder">3) Transformer Decoder</a></li>
+      <li><a href="#4-feed-foward-networkffn">4) Feed-Foward Network(FFN)</a></li>
+    </ul>
+  </li>
+  <li><a href="#3-experiments">3. Experiments</a></li>
+  <li><a href="#4-source-code">4. Source Code</a></li>
+</ul>
+    </div>
+</div>
+
+
+
+                </div>
                 
                 <div class="column is-8">
                     
@@ -359,102 +365,6 @@ Abstract에서 말한 것처럼, 코드는 매우 간단한 구조로 되어 있
 
                 </div>
                 
-                <div class="column is-4-desktop is-4-tablet">
-                    <p class="title is-4">Latest Posts</p>
-
-<div class="columns is-multiline">
-    
-    <div class="column is-12">
-        <div class="card">
-    
-    <div class="card-image">
-        <img src="../img/Better_plain_ViT_baselines_for_ImageNet-1k.png" alt="[Papers] Better  plain ViT baselines for ImageNet-1k">
-    </div>
-    
-    <div class="card-content">
-        <div class="content">
-            
-            <a class="title is-4" href="/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/">[Papers] Better  plain ViT baselines for ImageNet-1k</a>
-            
-            
-                <p><h1 id="better--plain-vit-baselines-for-imagenet-1k">Better  plain ViT baselines for ImageNet-1k</h1>
-</p>
-            
-        </div>
-        <div class="has-text-centered">
-            <a href="/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/" class="button is-primary">Read more</a>
-        </div>
-    </div>
-    <footer class="card-footer">
-        <p class="card-footer-item">Published: May 3, 2022</p>
-    </footer>
-</div>
-    </div>
-    
-    <div class="column is-12">
-        <div class="card">
-    
-    <div class="card-image">
-        <img src="../img/segmentation_label.png" alt="[DL] Semantic Segmentation에서 Label Image 생성하기">
-    </div>
-    
-    <div class="card-content">
-        <div class="content">
-            
-            <a class="title is-4" href="/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/">[DL] Semantic Segmentation에서 Label Image 생성하기</a>
-            
-            
-                <p><h2 id="-0intro-">** 0.Intro **</h2>
-<p>Semantic Segmentation Task를 학습하는데는 2가지 데이터가 필요합니다:
-<strong><em>(Input) X Data : 학습할 Image dataset
-(Input) Y Data : 학습할 Image에 대응되는 Color Map Image file</em></strong></p>
-</p>
-            
-        </div>
-        <div class="has-text-centered">
-            <a href="/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/" class="button is-primary">Read more</a>
-        </div>
-    </div>
-    <footer class="card-footer">
-        <p class="card-footer-item">Published: Jan 15, 2022</p>
-    </footer>
-</div>
-    </div>
-    
-    <div class="column is-12">
-        <div class="card">
-    
-    <div class="card-image">
-        <img src="../img/detr.png" alt="[Paper] DETR - End-to-End Object Detection with Transformer">
-    </div>
-    
-    <div class="card-content">
-        <div class="content">
-            
-            <a class="title is-4" href="/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/">[Paper] DETR - End-to-End Object Detection with Transformer</a>
-            
-            
-                <p><h1 id="detr---end-to-end-object-detection-with-transformer">DETR - End-to-End Object Detection with Transformer</h1>
-</p>
-            
-        </div>
-        <div class="has-text-centered">
-            <a href="/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/" class="button is-primary">Read more</a>
-        </div>
-    </div>
-    <footer class="card-footer">
-        <p class="card-footer-item">Published: Jan 12, 2022</p>
-    </footer>
-</div>
-    </div>
-    
-</div>
-
-
-
-
-                </div>
-                
             </div>
         </div>
     </section>
@@ -479,13 +389,7 @@ Abstract에서 말한 것처럼, 코드는 매우 간단한 구조로 되어 있
             
             <div class="column has-text-centered">
                 <div>
-                    <a href="/products/" class="link">Products</a>
-                </div>
-            </div>
-            
-            <div class="column has-text-centered">
-                <div>
-                    <a href="/privacy-policy/" class="link">Privacy Policy</a>
+                    <a href="https://github.com/bolero2" class="link">Github Profile</a>
                 </div>
             </div>
             
