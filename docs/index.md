@@ -2,15 +2,19 @@
 title: bolero2.log
 subtitle: AI Engineer's Archives
 layout: page
-callouts: home_callouts
-show_sidebar: true
+# callouts: home_callouts     # aboutme.md 위에 생기는 3개
+# show_sidebar: true
 menubar_toc: true
+# toc: true
+toc_title: ABOUTME.md   # 옆에 [content] 생기는 상자 제목임.
 ---
 
 
-# 🧐 bolero2
+## 🧐 bolero2
 
-(Original Read me is [Here](https://github.com/bolero2/bolero2/blob/main/README.md))
+(Original README.md is [Here](https://github.com/bolero2/bolero2/blob/main/README.md))  
+* I want to go [**Post Archive**](/blog) NOW!
+
 
 [![Tech Blog Badge](http://img.shields.io/badge/Tech-Blog-20c997?style=flat-square&logo=Velog&link=https://bolero2.dev)](https://bolero2.dev) [![Gmail Badge](https://img.shields.io/badge/Gmail-d14836?style=flat-square&logo=Gmail&logoColor=white&link=mailto:sheocjf1025@gmail.com)](mailto:sheocjf1025@gmail.com) [![Hits](https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fbolero2%2Fhit-counter&count_bg=%2379C83D&title_bg=%23555555&icon=&icon_color=%23E7E7E7&title=hits&edge_flat=false)](https://hits.seeyoufarm.com)
 

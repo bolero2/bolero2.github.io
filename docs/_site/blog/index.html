@@ -31,13 +31,21 @@
 <meta property="og:url" content="http://localhost:4000/blog/" />
 <meta property="og:site_name" content="bolero2.log" />
 <meta property="og:type" content="website" />
+<link rel="next" href="http://localhost:4000/blog/page2" />
 <meta name="twitter:card" content="summary" />
 <meta property="twitter:title" content="Blog" />
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"WebPage","description":"””","headline":"Blog","url":"http://localhost:4000/blog/"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <!-- head scripts --></head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=3563142385"></script>
+<script>
+  window['ga-disable-3563142385'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '3563142385');
+</script><!-- head scripts --></head>
 
   <body>
     <nav class="navbar is-primary  is-fixed-top " x-data="{ openNav: false }">
@@ -59,6 +67,19 @@
                 
                     
                     <a href="/blog/" class="navbar-item is-active">Blog</a>
+                    
+                
+                    
+                    <div class="navbar-item has-dropdown is-hoverable ">
+                        <a href="/" class="navbar-link ">My works</a>
+                        <div class="navbar-dropdown">
+                            
+                            <a href="https://github.com/bolero2/vggnet-torch" class="navbar-item ">vggnet-pytorch</a>
+                            
+                            <a href="https://github.com/bolero2/deeplab-v3-torch" class="navbar-item ">deeplab-v3-pytorch</a>
+                            
+                        </div>
+                    </div>
                     
                 
                     
@@ -86,7 +107,7 @@
     <div class="hero-body ">
         <div class="container">
             <h1 class="title is-2">Blog</h1>
-            <p class="subtitle is-3">AI Engineer의 기록 보관소</p>
+            <p class="subtitle is-3">Post Archive</p>
             
         </div>
     </div>
@@ -113,12 +134,16 @@
     <p class="pagination-previous" disabled>Previous</p>
     
     
-    <p class="pagination-next" disabled >Next</p>
+    <a href="/blog/page2" class="pagination-next is-info">Next</a>
     
     <ul class="pagination-list">
         
         
         <li><a class="pagination-link is-current">1</a></li>
+        
+        
+        
+        <li><a href="/blog/page2" class="pagination-link">2</a></li>
         
         
     </ul>
@@ -130,16 +155,91 @@
         <div class="card">
     
     <div class="card-image">
-        <img src="../img/Better_plain_ViT_baselines_for_ImageNet-1k.png" alt="[Papers] Better  plain ViT baselines for ImageNet-1k">
+        <img src="/img/thumbnail-nms.jpg" alt="[DL] NMS, Non-Maximum Suppression 파헤치기">
     </div>
     
     <div class="card-content">
         <div class="content">
             
-            <a class="title is-4" href="/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/">[Papers] Better  plain ViT baselines for ImageNet-1k</a>
+            <a class="title is-4" href="/deeplearning/2022/05/12/DL-Principle-of-NMS/">[DL] NMS, Non-Maximum Suppression 파헤치기</a>
             
             
-                <p><h1 id="better--plain-vit-baselines-for-imagenet-1k">Better  plain ViT baselines for ImageNet-1k</h1>
+                <p><p><span class="tag  is-primary ">
+    DeepLearning
+</span>
+<span class="tag  is-primary ">
+    ObjectDetection
+</span></p>
+</p>
+            
+        </div>
+        <div class="has-text-centered">
+            <a href="/deeplearning/2022/05/12/DL-Principle-of-NMS/" class="button is-primary">Read more</a>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <p class="card-footer-item">Published: May 12, 2022</p>
+    </footer>
+</div>
+    </div>
+    
+    <div class="column is-12">
+        <div class="card">
+    
+    <div class="card-image">
+        <img src="/img/thumbnail-ganet.png" alt="[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching">
+    </div>
+    
+    <div class="card-content">
+        <div class="content">
+            
+            <a class="title is-4" href="/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/">[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching</a>
+            
+            
+                <p><p><span class="tag  is-primary ">
+    Paper
+</span>
+<span class="tag  is-primary ">
+    DeepLearning
+</span></p>
+</p>
+            
+        </div>
+        <div class="has-text-centered">
+            <a href="/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/" class="button is-primary">Read more</a>
+        </div>
+    </div>
+    <footer class="card-footer">
+        <p class="card-footer-item">Published: May 7, 2022</p>
+    </footer>
+</div>
+    </div>
+    
+    <div class="column is-12">
+        <div class="card">
+    
+    <div class="card-image">
+        <img src="/img/thumbnail-Better_plain_ViT_baselines_for_ImageNet-1k.png" alt="[Papers] Better plain ViT baselines for ImageNet-1k">
+    </div>
+    
+    <div class="card-content">
+        <div class="content">
+            
+            <a class="title is-4" href="/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/">[Papers] Better plain ViT baselines for ImageNet-1k</a>
+            
+            
+                <p><p><span class="tag  is-primary ">
+    Paper
+</span>
+<span class="tag  is-primary ">
+    DeepLearning
+</span>
+<span class="tag  is-primary ">
+    Transformer
+</span>
+<span class="tag  is-primary ">
+    ImageClassification
+</span></p>
 </p>
             
         </div>
@@ -154,71 +254,21 @@
     </div>
     
     <div class="column is-12">
-        <div class="card">
-    
-    <div class="card-image">
-        <img src="../img/segmentation_label.png" alt="[DL] Semantic Segmentation에서 Label Image 생성하기">
-    </div>
-    
-    <div class="card-content">
-        <div class="content">
-            
-            <a class="title is-4" href="/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/">[DL] Semantic Segmentation에서 Label Image 생성하기</a>
-            
-            
-                <p><h1 id="semantic-segmentation에서-label-image-생성하기">Semantic Segmentation에서 Label Image 생성하기</h1>
-</p>
-            
-        </div>
-        <div class="has-text-centered">
-            <a href="/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/" class="button is-primary">Read more</a>
-        </div>
-    </div>
-    <footer class="card-footer">
-        <p class="card-footer-item">Published: Jan 15, 2022</p>
-    </footer>
-</div>
-    </div>
-    
-    <div class="column is-12">
-        <div class="card">
-    
-    <div class="card-image">
-        <img src="../img/detr.png" alt="[Paper] DETR - End-to-End Object Detection with Transformer">
-    </div>
-    
-    <div class="card-content">
-        <div class="content">
-            
-            <a class="title is-4" href="/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/">[Paper] DETR - End-to-End Object Detection with Transformer</a>
-            
-            
-                <p><h1 id="detr---end-to-end-object-detection-with-transformer">DETR - End-to-End Object Detection with Transformer</h1>
-</p>
-            
-        </div>
-        <div class="has-text-centered">
-            <a href="/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/" class="button is-primary">Read more</a>
-        </div>
-    </div>
-    <footer class="card-footer">
-        <p class="card-footer-item">Published: Jan 12, 2022</p>
-    </footer>
-</div>
-    </div>
-    
-    <div class="column is-12">
         <nav class="pagination is-centered">
     
     <p class="pagination-previous" disabled>Previous</p>
     
     
-    <p class="pagination-next" disabled >Next</p>
+    <a href="/blog/page2" class="pagination-next is-info">Next</a>
     
     <ul class="pagination-list">
         
         
         <li><a class="pagination-link is-current">1</a></li>
+        
+        
+        
+        <li><a href="/blog/page2" class="pagination-link">2</a></li>
         
         
     </ul>
@@ -268,7 +318,7 @@
         
 
         <div class="content is-small has-text-centered">
-            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+            <p class="">Contact ME : <a href="sheocjf1025@gmail.com">sheocjf1025@gmail.com</a></p>
         </div>
     </div>
 </footer>

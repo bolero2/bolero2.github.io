@@ -17,5 +17,12 @@
 #       link: /showcase/
 - name: Blog
   link: /blog/
+- name: My works
+  link: /#
+  dropdown:
+    - name: vggnet-pytorch
+      link: https://github.com/bolero2/vggnet-torch
+    - name: deeplab-v3-pytorch
+      link: https://github.com/bolero2/deeplab-v3-torch
 - name: Github Profile
   link: https://github.com/bolero2

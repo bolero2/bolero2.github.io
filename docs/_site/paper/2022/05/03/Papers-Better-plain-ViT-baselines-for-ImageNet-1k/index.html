@@ -31,17 +31,24 @@
 <link rel="canonical" href="http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/" />
 <meta property="og:url" content="http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/" />
 <meta property="og:site_name" content="bolero2.log" />
-<meta property="og:image" content="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" />
+<meta property="og:image" content="http://localhost:4000/img/thumbnail-Better_plain_ViT_baselines_for_ImageNet-1k.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2022-05-03T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" />
+<meta property="twitter:image" content="http://localhost:4000/img/thumbnail-Better_plain_ViT_baselines_for_ImageNet-1k.png" />
 <meta property="twitter:title" content="[Papers] Better plain ViT baselines for ImageNet-1k" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"bolero2"},"dateModified":"2022-05-03T00:00:00+09:00","datePublished":"2022-05-03T00:00:00+09:00","description":"original ViT로부터 성능을 10%나 증가시킨 방법","headline":"[Papers] Better plain ViT baselines for ImageNet-1k","image":"http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/"},"url":"http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"bolero2"},"dateModified":"2022-05-03T00:00:00+09:00","datePublished":"2022-05-03T00:00:00+09:00","description":"original ViT로부터 성능을 10%나 증가시킨 방법","headline":"[Papers] Better plain ViT baselines for ImageNet-1k","image":"http://localhost:4000/img/thumbnail-Better_plain_ViT_baselines_for_ImageNet-1k.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/"},"url":"http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <!-- head scripts --></head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=3563142385"></script>
+<script>
+  window['ga-disable-3563142385'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '3563142385');
+</script><!-- head scripts --></head>
 
   <body>
     <nav class="navbar is-primary  is-fixed-top " x-data="{ openNav: false }">
@@ -63,6 +70,19 @@
                 
                     
                     <a href="/blog/" class="navbar-item ">Blog</a>
+                    
+                
+                    
+                    <div class="navbar-item has-dropdown is-hoverable ">
+                        <a href="/" class="navbar-link ">My works</a>
+                        <div class="navbar-dropdown">
+                            
+                            <a href="https://github.com/bolero2/vggnet-torch" class="navbar-item ">vggnet-pytorch</a>
+                            
+                            <a href="https://github.com/bolero2/deeplab-v3-torch" class="navbar-item ">deeplab-v3-pytorch</a>
+                            
+                        </div>
+                    </div>
                     
                 
                     
@@ -89,7 +109,7 @@
         <section class="hero  is-medium  is-bold is-primary" >
     <div class="hero-body ">
         <div class="container">
-            <h1 class="title is-2">[Papers] Better  plain ViT baselines for ImageNet-1k</h1>
+            <h1 class="title is-2">[Papers] Better plain ViT baselines for ImageNet-1k</h1>
             <p class="subtitle is-3"></p>
             
         </div>
@@ -135,7 +155,20 @@
 
     
 
-    <h1 id="better--plain-vit-baselines-for-imagenet-1k">Better  plain ViT baselines for ImageNet-1k</h1>
+    <p><span class="tag  is-primary ">
+    Paper
+</span>
+<span class="tag  is-primary ">
+    DeepLearning
+</span>
+<span class="tag  is-primary ">
+    Transformer
+</span>
+<span class="tag  is-primary ">
+    ImageClassification
+</span></p>
+
+<h1 id="better--plain-vit-baselines-for-imagenet-1k">Better  plain ViT baselines for ImageNet-1k</h1>
 
 <p>이번에 소개할 논문은 5월 3일 <a href="https://paperswithcode.com">Paperswithcode</a>에 게재된
 <strong>“<em>Better plain ViT baselines for ImageNet-1k</em>“</strong> 라는 논문입니다.
@@ -179,7 +212,7 @@
 
 <p>ViT 모델에 대한 논문은 ImageNet과 같이 large-scale의 Dataset을 대상으로 하여, 잘 tuning된 ResNet보다 우월함을 보였습니다. ImageNet Dataset은 Classification 분야의 testbed(실험의 기준점) 역할을 하며, 이 데이터셋을 사용하는 모델은 여러 수정사항 없이 간단한 baseline의 코드를 사용하는 것(코드 자체를 보유한다는 의미?)이 꽤나 높은 이점이 될 수 있습니다.</p>
 
-<p>본 논문은 <strong>introduction</strong> 단락에서 <em><code class="language-plaintext highlighter-rouge">big_vision</code></em> 이라는 것을 소개하고 있습니다. 이 _<code class="language-plaintext highlighter-rouge">big_vision</code>_은 ViT를 포함하여 MLP-Mixer, LiT 등 vision transformer 모델을 baseline 적으로 가지고 있으며, 논문 자체적으로 baseline의 모델로 높은 성능을 보여줄 수 있었는지 기술하게 됩니다.</p>
+<p>본 논문은 <strong>introduction</strong> 단락에서 <em><code class="language-plaintext highlighter-rouge">big_vision</code></em> 이라는 것을 소개하고 있습니다. 이 <em><code class="language-plaintext highlighter-rouge">big_vision</code></em> 은 ViT를 포함하여 MLP-Mixer, LiT 등 vision transformer 모델을 baseline 적으로 가지고 있으며, 논문 자체적으로 baseline의 모델로 높은 성능을 보여줄 수 있었는지 기술하게 됩니다.</p>
 
 <p><em><strong>요약하자면, “ImageNet Dataset을 타겟으로 하여 ViT의 baseline 모델에 충실하게 실험을 진행했다.”라고 말하고 싶은 것 같습니다. (이것은 big_vision에 코드가 탑재되어 있습니다.)</strong></em></p>
 
@@ -268,7 +301,7 @@
         <span class="icon"><i class="fab fa-twitter fa-lg"></i></span>
     </a>
     <a class="button is-medium is-linkedin"
-       onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/&title=%5BPapers%5D+Better++plain+ViT+baselines+for+ImageNet-1k&summary=&source=');">
+       onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/&title=%5BPapers%5D+Better+plain+ViT+baselines+for+ImageNet-1k&summary=&source=');">
         <span class="icon"><i class="fab fa-linkedin fa-lg"></i></span>
     </a>
     <a class="button is-medium is-reddit"
@@ -316,7 +349,7 @@
         
 
         <div class="content is-small has-text-centered">
-            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+            <p class="">Contact ME : <a href="sheocjf1025@gmail.com">sheocjf1025@gmail.com</a></p>
         </div>
     </div>
 </footer>

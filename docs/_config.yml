@@ -16,7 +16,7 @@ fixed_navbar: top
 # direction: one of <ltr, rtl, auto>, default: ltr
 direction: ltr
 
-paginate: 5
+paginate: 3
 paginate_path: "/blog/page:num"
 # theme: "bulma-clean-theme"
 
@@ -52,7 +52,7 @@ sass:
   style: compressed
   source_dir: _sass
 
-#google_analytics: UA-code-here
+google_analytics: 3563142385
 
 defaults:
   -
