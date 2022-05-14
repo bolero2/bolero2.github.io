@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.2.2">Jekyll</generator><link href="http://localhost:4000/feed.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" hreflang="en" /><updated>2022-05-14T09:48:15+09:00</updated><id>http://localhost:4000/feed.xml</id><title type="html">bolero2.log</title><subtitle>&quot;&quot;
+</subtitle><entry><title type="html">[Papers] Better plain ViT baselines for ImageNet-1k</title><link href="http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/" rel="alternate" type="text/html" title="[Papers] Better plain ViT baselines for ImageNet-1k" /><published>2022-05-03T00:00:00+09:00</published><updated>2022-05-03T00:00:00+09:00</updated><id>http://localhost:4000/paper/2022/05/03/%5BPapers%5D%20Better%20%20plain%20ViT%20baselines%20for%20ImageNet-1k</id><content type="html" xml:base="http://localhost:4000/paper/2022/05/03/Papers-Better-plain-ViT-baselines-for-ImageNet-1k/"><![CDATA[<h1 id="better--plain-vit-baselines-for-imagenet-1k">Better  plain ViT baselines for ImageNet-1k</h1>
+
+<p>이번에 소개할 논문은 5월 3일 <a href="https://paperswithcode.com">Paperswithcode</a>에 게재된
+<strong>“<em>Better plain ViT baselines for ImageNet-1k</em>“</strong> 라는 논문입니다.
+(논문 링크 : https://arxiv.org/pdf/2205.01580.pdf)</p>
+
+<p>논문 자체가 3장으로 구성되어 있기 때문에, 읽기 편할 것입니다.</p>
+
+<p>논문 제목에 나와있는 ViT 모델은 <strong>Image Classification</strong> task에서 사용되는 모델로써, NLP(Natural Language processing)에서 사용되는 Transformer 모듈을 Image task에 적용한 아주 유명한 모델입니다.</p>
+
+<p>(ViT 이전에는 Convolution 연산이 Image Task의 독보적인 수단이었지만, ViT 이후로 Classification 뿐만 아니라 Object Detection(ex. DETR), Video Recognition 등에서도 Transformer 모듈이 활용될 정도로 ViT가 그 판도를 바꿔놓았습니다.)</p>
+
+<p>기회가 되면 ViT 자체 논문과 Attention(name: Attention is all you need) 논문, BERT 논문에 대해서도 다뤄볼 예정입니다.</p>
+
+<ul>
+  <li><strong>ViT paper</strong> : <a href="https://arxiv.org/pdf/2010.11929.pdf">An Image Is Worth 16x16 Words: Transformers For Image Recognition At Scale</a></li>
+  <li><strong>Attention paper</strong> : <a href="https://arxiv.org/pdf/1706.03762.pdf">Attention Is All You Need</a></li>
+  <li><strong>BERT paper</strong> : <a href="https://arxiv.org/pdf/1810.04805.pdf">BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding</a></li>
+</ul>
+
+<p>(본 블로그에 있는 <strong>DETR</strong> 요약 포스트 : <a href="https://velog.io/@bolero2/Paper-DETR-End-to-End-Object-Detection-with-Transformer">DETR - End-to-End Object Detection with Transformer</a>)</p>
+
+<hr />
+
+<h2 id="0-abstract">0. Abstract</h2>
+
+<p>ViT는 Vision Transformer의 약자입니다. ViT의 발표 이후로 Image Classification 뿐만 아니라 다양한 Image 분야에서 Transformer 모듈을 적극 기용하고 있습니다.</p>
+
+<p>ViT는 Image Classification 모델로써, 분류 라벨을 1000개나 가지고 있는 ImageNet 경진대회 (ILSVRC, ImageNet Large Scale Visual Recognition Challenge)에서 매우 우수한 성능을 보였습니다.</p>
+
+<p>Vision Transformer 기술을 ImageNet-1k 경진대회에서 잘 쓰기 위해서는 _<strong>“sophisticated regularization”</strong>_이 있어야 하는데, 사실 이러한 것들 말고 일반적인 데이터 증대 기법(standard data augmentation)만으로도 놀라운 성능을 보여줄 수 있습니다.</p>
+
+<p>본 논문에서는 일반적인 ViT 모델에서 몇 개의 수정을 통해 성능을 dramatical 하게 올렸습니다.</p>
+
+<p>특히, 90epochs 만으로 top-1 accuracy가 76%를 넘었고, 300 epochs 까지 가는데 하루도 걸리지 않았습니다.</p>
+
+<hr />
+
+<h2 id="1-introduction">1. Introduction</h2>
+
+<p>ImageNet 경진대회의 데이터셋 <strong><a href="https://image-net.org/index.php">ImageNet 데이터셋</a></strong>은 Image Classification 모델의 지표, 랭킹을 매기는데 굉장히 중요한 지표입니다. 대부분의 Classification 모델이 ImageNet 데이터셋을 사용하여 벤치마크 점수를 매기고, 랭킹을 매기게 됩니다.</p>
+
+<p>ViT 모델에 대한 논문은 ImageNet과 같이 large-scale의 Dataset을 대상으로 하여, 잘 tuning된 ResNet보다 우월함을 보였습니다. ImageNet Dataset은 Classification 분야의 testbed(실험의 기준점) 역할을 하며, 이 데이터셋을 사용하는 모델은 여러 수정사항 없이 간단한 baseline의 코드를 사용하는 것(코드 자체를 보유한다는 의미?)이 꽤나 높은 이점이 될 수 있습니다.</p>
+
+<p>본 논문은 <strong>introduction</strong> 단락에서 <em><code class="language-plaintext highlighter-rouge">big_vision</code></em> 이라는 것을 소개하고 있습니다. 이 _<code class="language-plaintext highlighter-rouge">big_vision</code>_은 ViT를 포함하여 MLP-Mixer, LiT 등 vision transformer 모델을 baseline 적으로 가지고 있으며, 논문 자체적으로 baseline의 모델로 높은 성능을 보여줄 수 있었는지 기술하게 됩니다.</p>
+
+<p><em><strong>요약하자면, “ImageNet Dataset을 타겟으로 하여 ViT의 baseline 모델에 충실하게 실험을 진행했다.”라고 말하고 싶은 것 같습니다. (이것은 big_vision에 코드가 탑재되어 있습니다.)</strong></em></p>
+
+<p><em><strong>애초에 뒷부분을 보게 되면 모델 아키텍쳐의 변형이 이루어지지 않으며, batch_size 변경과 같은 아주 일반적이고 사소한 부분을 변형했습니다.</strong></em></p>
+
+<p>단순함을 추구하는 논문으로 볼 수 있겠네요.</p>
+
+<hr />
+
+<h2 id="2-experimental-setup">2. Experimental setup</h2>
+
+<p>실험(훈련 및 평가)은 전부 ImageNet 데이터셋을 타겟으로 삼았습니다.
+실험에 대한 모델은 <code class="language-plaintext highlighter-rouge">ViT-S/16</code> 모델로 선정하였고, 만약 컴퓨팅 자원이 많이 남는 경우엔 <code class="language-plaintext highlighter-rouge">ViT-B/16</code>이나 <code class="language-plaintext highlighter-rouge">ViT-B/32</code>를 써도 된다고 합니다.</p>
+
+<p>Transformer 모듈 사용시 이미지를 n 크기의 “patch”로 나누는 부분이 있는데, 이 patch를 늘리는 것은 Image의 해상도(resolution)를 줄이는 것과 동일합니다.
+(ViT-B/16의 경우 patch 크기가 16이 되고, ViT-B/32의 경우 patch 크기가 32가 됩니다. 이러한 이유 때문에 patch 크기를 언급한 것 같네요.)</p>
+
+<p>실험은 <a href="https://arxiv.org/pdf/1409.4842.pdf">Inception Crop</a>, random horizontal flip, random Augmentation 그리고 Mixup Augmentation을 사용하였습니다.</p>
+
+<hr />
+
+<h2 id="3-results">3. Results</h2>
+
+<p><img src="https://velog.velcdn.com/images/bolero2/post/a8de228b-d957-4fc7-8547-fdb7fb0cc6da/image.png" alt="" /></p>
+
+<p>Experimental setup 파트의 setup을 통해 학습한 결과,</p>
+
+<p><strong>80%의 성능이 나오는 Epoch 300까지 21시간 40분밖에 걸리지 않았고
+성능 또한 original <code class="language-plaintext highlighter-rouge">ViT</code>보다 2% 정도 더 높습니다.</strong></p>
+
+<p><code class="language-plaintext highlighter-rouge">ResNet</code> original을 90 epoch 동안 학습시키고, improved ViT 역시 90 epoch 동안 학습시켰을 때는 성능이 1-2% 내외로 ResNet보다 더 높습니다.</p>
+
+<p>기존의 ViT original 논문과 학습 부분에서 차이점을 둔 것은 다음과 같습니다:</p>
+<blockquote>
+  <ol>
+    <li>batch_size를 4096에서 1024로 낮춤.</li>
+    <li>class token 대신 GAP(Global Average Pooling) 사용.</li>
+    <li>적은 수준의 Random Augmentation과 Mixup 사용.</li>
+    <li>Position Embedding은 fixed 2D sin-cos 사용.</li>
+  </ol>
+</blockquote>
+
+<p><em><strong>이렇게 ViT 모델에서 위와 같은 단순한 변경을 통해, 최종 300 Epoch에서 original <code class="language-plaintext highlighter-rouge">ViT-B/32</code> 모델 보다 약 6% 정도 성능 증가를 보였습니다.</strong></em></p>
+
+<p><img src="https://velog.velcdn.com/images/bolero2/post/af5f0056-0088-4af9-8594-50df11402069/image.png" alt="" /></p>
+
+<p>이 표를 보게 되면, original 보다 성능이 올라간 것은 확실한 사실입니다.
+이 표에서 주목해야 할 부분은, <strong>위에서 언급한 4가지 변경점을 하나씩 제거해 보았을 때의 성능 결과입니다.</strong></p>
+
+<p>가장 변경점이 적은 부분은 모델의 Head 부분을 MLP에서 linear로 변경하였을 때가 가장 성능 변화가 없었습니다. 그 외의 변경점은 1-2% 내외로 성능 하락이 존재합니다.</p>
+
+<p>요약해보자면, <strong>“이렇게 단순한 baseline 모델에서 단순한 변경 사항들(batch_size 변경, GAP 추가, augmentation 기법 추가 등)을 사용함으로써 드라마틱한 성능 향상을 이루어낼 수 있다”</strong> 가 핵심이라고 볼 수 있겠습니다.</p>
+
+<p>SAM(Sharpness Aware Minimization) 기법, CutMix, blurring, 고해상도에서의 파인 튜닝, 드롭아웃, 모델 구조 변경, stochastic depth와 같은 고급 기술(?)들은 하나도 적용하지 않았습니다.</p>
+
+<hr />
+
+<h2 id="5-conclusion">5. Conclusion</h2>
+
+<p>항상 단순한 것을 추구하는 것은 가치있다고 하네요.</p>
+
+<blockquote>
+  <p>“It is always worth striving for simplicity.”</p>
+</blockquote>
+
+<hr />
+
+<p><strong>(Paper Review는 제가 스스로 읽고 작성한 글이므로, 주관적인 내용임을 밝힙니다.)</strong></p>]]></content><author><name>bolero2</name></author><category term="Paper" /><summary type="html"><![CDATA[original ViT로부터 성능을 10%나 증가시킨 방법]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" /><media:content medium="image" url="http://localhost:4000/img/Better_plain_ViT_baselines_for_ImageNet-1k.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">[DL] Semantic Segmentation에서 Label Image 생성하기</title><link href="http://localhost:4000/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/" rel="alternate" type="text/html" title="[DL] Semantic Segmentation에서 Label Image 생성하기" /><published>2022-01-15T00:00:00+09:00</published><updated>2022-01-15T00:00:00+09:00</updated><id>http://localhost:4000/deeplearning/2022/01/15/%5BDL%5D-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0</id><content type="html" xml:base="http://localhost:4000/deeplearning/2022/01/15/DL-Semantic-Segmentation%EC%97%90%EC%84%9C-Label-Image-%EC%83%9D%EC%84%B1%ED%95%98%EA%B8%B0/"><![CDATA[<h2 id="-0intro-">** 0.Intro **</h2>
+<p>Semantic Segmentation Task를 학습하는데는 2가지 데이터가 필요합니다:
+<strong><em>(Input) X Data : 학습할 Image dataset
+(Input) Y Data : 학습할 Image에 대응되는 Color Map Image file</em></strong></p>
+
+<p>특히, Y Data 의 경우에 “<strong>JPG</strong>” 포맷이 아닌 “<strong>PNG</strong>” 포맷을 사용하게 됩니다.</p>
+
+<p>JPG 포맷은 손실 압축을 사용하기 때문에, 용량이 작다는 장점이 있지만
+_<strong>사용자의 눈에 잡히지 않는 특정 부분의 Color 값이 변경된다는 특징</strong>_이 있습니다.</p>
+
+<p>이번 글에서는 Semantic Segmentation의 Label Image를 생성하는 방법과 일반적인 Image Data 와의 차이점을 살펴보도록 하겠습니다.</p>
+
+<hr />
+
+<h2 id="1-about-semantic-segmentation"><strong>1. About Semantic Segmentation</strong></h2>
+<p>시작하기에 앞서, Semantic Segmentation Task가 정확히 어떤 Task인지 알아야 합니다.
+Semantic Segmentation Task의 경우, 
+<strong>전체 이미지에 대해 각각의 픽셀이 어느 Label(=Category)에 속하는지 분류하는 문제</strong>입니다.</p>
+
+<p>정교한 분류를 해내야 하기 때문에 <strong>Atrous Convolution</strong>과 같은 <strong>Receptive Field(수용 영역, 필터가 한 번에 볼 수 있는 영역)</strong>가 넓은 합성 곱 연산을 주로 사용합니다.</p>
+
+<dl>
+  <dt><strong>DeepLab V3+</strong> 코드 중에서, 가장 중요한 Loss Function 구현 부분을 보도록 하겠습니다.</dt>
+  <dt>(Github Repository</dt>
+  <dd>https://github.com/jfzhang95/pytorch-deeplab-xception)</dd>
+</dl>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="n">nn</span>
+
+<span class="k">class</span> <span class="nc">SegmentationLosses</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_average</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ignore_index</span> <span class="o">=</span> <span class="n">ignore_index</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">batch_average</span> <span class="o">=</span> <span class="n">batch_average</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cuda</span> <span class="o">=</span> <span class="n">cuda</span>
+
+    <span class="k">def</span> <span class="nf">build_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'ce'</span><span class="p">):</span>
+        <span class="s">"""Choices: ['ce' or 'focal']"""</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">'ce'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">CrossEntropyLoss</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">'focal'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">FocalLoss</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">CrossEntropyLoss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">logit</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">ignore_index</span><span class="p">,</span>
+                                        <span class="n">reduction</span><span class="o">=</span><span class="s">'mean'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">cuda</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">.</span><span class="nb">long</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">batch_average</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">/=</span> <span class="n">n</span>
+
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span> <span class="nf">FocalLoss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">logit</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">ignore_index</span><span class="p">,</span>
+                                        <span class="n">reduction</span><span class="o">=</span><span class="s">'mean'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">cuda</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+
+        <span class="n">logpt</span> <span class="o">=</span> <span class="o">-</span><span class="n">criterion</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">.</span><span class="nb">long</span><span class="p">())</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logpt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alpha</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">logpt</span> <span class="o">*=</span> <span class="n">alpha</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pt</span><span class="p">)</span> <span class="o">**</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="n">logpt</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">batch_average</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">/=</span> <span class="n">n</span>
+
+        <span class="k">return</span> <span class="n">loss</span>
+</code></pre></div></div>
+
+<p>위의 DeepLab V3+ Repository에 구현되어 있는 Loss Function 입니다.</p>
+
+<p>여기서 우리는 핵심적인 코어 함수가 <strong>nn.CrossEntropyLoss</strong> 임을 알 수 있습니다.
+Cross-Entropy Loss Function(이하 <strong>CE Loss</strong>)은 Semantic Segmentation Task(이하 <strong>분할 문제</strong>)이전에 분류 문제(Classification)에서 자주 쓰이는 손실 함수입니다.</p>
+
+<p>그럼 왜 분류 문제와 분할 문제는 둘다 CE Loss를 쓰는 것일까요?</p>
+
+<blockquote>
+  <p>1) 분류 문제(Classification) 에서는 이미지 1장 전체에 대한 Label을 분류합니다.
+(ex. 이 사진은 고양이 사진입니다!)</p>
+
+  <p>2) 분할 문제(Semantic Segmentation) 에서는 이미지 1장 내의 1개 픽셀에 대한 Label을 분류합니다.
+(ex. 이 픽셀은 고양이에 해당하는 픽셀입니다!)</p>
+</blockquote>
+
+<p>위에서 서술 하였듯이, 두 문제 모두 분류를 하긴 하지만 Classification 문제의 경우는 이미지 전체를 분류하고,
+<strong>Semantic Segmentation 문제의 경우는 1개 픽셀에 대해서만 분류합니다.</strong></p>
+
+<p>(분류 문제 신경망에서, Batch Size가 1이라고 가정한다면 단순히 
+True-Label 1개와 Predicted-Label 1개를 비교하는 것처럼, 
+True-Label’s 1–pixel과 Predicted-Label’s 1-pixel을 비교하는 것입니다.
+이는 이미지의 width * height 수만큼 반복됩니다.)</p>
+
+<p>1개 픽셀이라고 한다면?
+일반적인 Color Image는 <strong>3채널의 RGB</strong> 값이 들어오지만, 
+CE Loss를 사용하는 분할 문제 특성 상 <strong>1개 채널의 값</strong>이 들어오는데 이 값이 바로 <strong>Label Value</strong>가 되는 것입니다.</p>
+
+<p>최종적으로, Semantic Segmentation Task의 학습 방식은</p>
+
+<blockquote>
+  <ol>
+    <li>1개 픽셀 별로 Label 값을 다르게 준다.(Dataset 측면)</li>
+    <li>CE Loss를 통해 손실 값을 구한다.</li>
+    <li>Optimizer(SGD, Adam etc.)를 사용하여 해당 손실 값을 backward 방향으로 가중치를 갱신한다.</li>
+  </ol>
+</blockquote>
+
+<p>3단계로 볼 수 있습니다.</p>
+
+<hr />
+
+<h2 id="2-cv2imwrite--vs-pascal-voc-annotation">2. cv2.imwrite( ) vs Pascal VOC Annotation</h2>
+<p>Label Image 제작에 앞서, 실제로</p>
+
+<ul>
+  <li>일반적인 이미지 저장 함수 cv2.imwrite를 사용하여 저장한 Label Image</li>
+  <li>Pascal VOC의 Semantic Segmentation Task의 Annotation Label Image</li>
+</ul>
+
+<p>를 비교해 보았습니다.
+(Pascal VOC Dataset : host.robots.ox.ac.uk/pascal/VOC/voc2007)</p>
+
+<p><strong><em>Mac OS — file command in terminal</em></strong>
+<img src="https://images.velog.io/images/bolero2/post/bf3c4130-3bc6-4d4e-bdd8-c013ff4cbeb0/command.png" alt="file command in terminal" /></p>
+
+<p>위 이미지는 2개의 이미지를 Terminal 상에서 file command로 읽어온 결과입니다.</p>
+
+<p><strong><em>2009_001625.png — RAW Image file</em></strong>
+<img src="https://images.velog.io/images/bolero2/post/166417ed-1203-4b76-a7c9-563b1ef34d5d/bottle1.png" alt="2009_001625.png" /></p>
+
+<p><strong>2009_001625.png</strong> 파일은 Pascal VOC Dataset에서 가져온 파일이고,
+<strong>2009_001625_RGB.png</strong> 파일은 cv2.imwrite( ) 함수로 저장한 파일입니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">2009_001625.png(VOC IMAGE)</th>
+      <th style="text-align: center">2009_001625_RGB.png(cv2.imwrite IMAGE)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://images.velog.io/images/bolero2/post/5a20712b-14a2-4374-a4b4-72e31dc1683d/bottle1.png" alt="2009_001625.png" /></td>
+      <td style="text-align: center"><img src="https://images.velog.io/images/bolero2/post/5b4e2800-04c5-4cbb-a3d7-de24198f7da1/bottle1_RGB.png" alt="2009_001625_RGB.png" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>명령어 결과를 보면, VOC Image는 8-bit colormap 파일이지만 cv2.imwrite로 저장한 Image는 8-bit/color RGB 파일입니다.
+사람이 보기엔, 육안상으로는 어떤 차이가 있을까요?</p>
+
+<p>어떤 이미지가 Pascal VOC인지 모를 정도로 너무 유사합니다…
+육안상으로도 전혀 차이점이 없습니다. 
+차이점이라고는 위에서 언급한 8-bit colormap이냐, 8-bit/color RGB 파일이냐 차이입니다.
+우리는 여기서 PNG 포맷의 특성과 Label Image와의 관계에 대해 알아볼 필요가 있습니다.</p>
+
+<hr />
+
+<h2 id="3-png-format-and-segmentation-label-image">3. PNG Format <em>and</em> Segmentation Label Image</h2>
+<p>PNG 포맷을 사용하는 이유는 JPG와 같은 손실압축 방식이 아닌,
+원본 그대로의 Color 값을 저장합니다.</p>
+
+<p>그리고 아주 중요한 특징이 하나 더 있는데, 바로
+<strong>Palette 정보를 넣을 수 있다는 점</strong>입니다.</p>
+
+<p>Palette 정보가 이미지에 들어가게 되면 Image Array는 더 이상 3채널이어야 할 필요가 없어집니다. 이를</p>
+
+<blockquote>
+  <p><strong>“Indexed Image”</strong></p>
+</blockquote>
+
+<p>라고 부릅니다.</p>
+
+<p>말 그대로 <strong>“색인화 된 이미지”</strong> 인 것이죠.</p>
+
+<p>Index 정보는 Palette가 되는 것이고, Image Array에는 단순히 1채널의 공간에 색인 정보(Index value)만 넣어주면 됩니다.
+추후에 Palette를 바꾸게 되면, Image의 색상 값도 바뀌게 되는 것입니다.</p>
+
+<p><strong>Semantic Segmentation은 Pixel에 대한 라벨 값을 학습할 때, 이 Index value를 학습하게 됩니다.</strong></p>
+
+<hr />
+
+<h2 id="4-how-create-label-image">4. <em>How create</em>… Label Image?</h2>
+<p>위에서 
+<em>1) 왜 PNG 포맷을 사용해야 하는지,</em>
+<em>2) Indexed Image란 무엇인지,</em>
+<em>3) 왜 cv2.imwrite( )와 같은 일반적인 이미지 저장 함수로 저장하면 안되는지</em>
+알아보았습니다.</p>
+
+<p>이제는 Polygon 타입의 Label Image (for Segmentation)를 제작해보겠습니다.
+준비물은 다음과 같습니다:</p>
+
+<blockquote>
+  <ol>
+    <li>Color Map과 Palette 정보</li>
+    <li>저장할 Image 정보(file 형식, numpy.ndarray 형식 모두 상관 없습니다.)</li>
+  </ol>
+</blockquote>
+
+<hr />
+
+<p><strong><em>Color Map을 생성하는 코드입니다.</em></strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+ 
+<span class="k">def</span> <span class="nf">make_colormap</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">bit_get</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+       <span class="k">return</span> <span class="p">(</span><span class="n">val</span> <span class="o">&gt;&gt;</span> <span class="n">idx</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span>
+ 
+   <span class="n">colormap</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+   <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+ 
+   <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">))):</span>
+       <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+           <span class="n">colormap</span><span class="p">[:,</span> <span class="n">channel</span><span class="p">]</span> <span class="o">|=</span> <span class="n">bit_get</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
+       <span class="n">ind</span> <span class="o">&gt;&gt;=</span> <span class="mi">3</span>
+ 
+   <span class="k">return</span> <span class="n">colormap</span>
+ 
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">make_colormap</span><span class="p">(</span><span class="mi">256</span><span class="p">).</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">cmap</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">color</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">palette</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 Color Map을 생성하는 코드입니다.</p>
+
+<p>Pascal VOC에서 해당 방식으로 Color Map을 생성하여 [20개 라벨 + background] 까지 하여 총 21개의 색상 값을 사용합니다.</p>
+
+<p>우리가 저 코드에서 사용할 변수는 <strong>cmap</strong> 과 <strong>palette</strong> 가 있습니다.
+<strong>cmap</strong> 은 Image에 색인 정보를 넣어줄 때 사용할 것이고, 
+<strong>palette</strong> 는 PNG 포맷으로 저장할 때 넣어줄 팔레트 정보입니다.</p>
+
+<p>해당 코드 동작 결과는 다음과 같습니다:</p>
+<blockquote>
+  <p>[0, 0, 0, 128, 0, 0, 0, 128, 0, 128, 128, 0, 0, 0, 128, 128, 0, 128, 0, 128, 128, … ]</p>
+</blockquote>
+
+<p>보시다시피 앞에서 3개씩 끊어서 볼 수 있습니다.</p>
+
+<p>예를 들어, 0번 라벨(background)의 경우 RGB 값은 [0, 0, 0]이 될 것이고,
+1번 라벨(aeroplane)의 경우 RGB 값은 [128, 0, 0]이 될 것이며, 
+2번 라벨(bicycle)의 경우 RGB 값은 [0, 128, 0]이 될 것입니다.</p>
+
+<p>(이는 사용자가 직접 값을 넣어줘도 상관없습니다. 본문에서는 Pascal VOC Dataset을 사용하여 실험하였기 때문에, Pascal VOC Dataset의 Category 정보와 색상 정보를 사용하였습니다.)</p>
+
+<hr />
+
+<p>Color Map과 Palette 정보를 생성하였다면, 이미지에 색인 정보와 Palette를 함께 넣어주기만 하면 됩니다.</p>
+
+<p><em><strong>Label Image 생성 코드</strong></em></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+
+<span class="c1"># Image data to save = image_data(numpy.ndarray)
+</span><span class="n">label_img</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">image_data</span><span class="p">)</span>
+ 
+<span class="c1"># if image array has BGR order
+</span><span class="n">label_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">label_img</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+<span class="c1"># Create an unsigned-int (8bit) empty numpy.ndarray of the same size (shape)
+</span><span class="n">img_png</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">label_img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label_img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+ 
+<span class="c1"># Assign index to empty ndarray. Finding pixel location using np.where.
+# If you don't use np.where, you have to run a double for-loop for each row/column.
+</span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">val_col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cmap</span><span class="p">):</span>
+    <span class="n">img_png</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">all</span><span class="p">(</span><span class="n">label_img</span> <span class="o">==</span> <span class="n">val_col</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))]</span> <span class="o">=</span> <span class="n">index</span>
+ 
+<span class="c1"># Convert ndarray with index into Image object (P mode) of PIL package
+</span><span class="n">img_png</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">img_png</span><span class="p">).</span><span class="n">convert</span><span class="p">(</span><span class="s">'P'</span><span class="p">)</span>
+<span class="c1"># Palette information injection
+</span><span class="n">img_png</span><span class="p">.</span><span class="n">putpalette</span><span class="p">(</span><span class="n">palette</span><span class="p">)</span>
+<span class="c1"># save image
+</span><span class="n">img_png</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">'output.png'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 실제로 Label Image를 생성하는 코드입니다.</p>
+
+<p>순서는 다음과 같습니다:</p>
+<blockquote>
+  <ol>
+    <li>image data를 numpy.ndarray 타입으로 호출합니다.</li>
+    <li>BGR 순서라면 RGB 순서로 바꿔줍니다.</li>
+    <li>동일한 크기의 unsigned-int (8bit) ndarray를 생성합니다.</li>
+    <li><strong>각 Color Map의 색상 정보를 찾아서, 색인화 과정을 합니다.</strong>
+(이미지의 픽셀을 돌며 비교하는 것이 아닌, Color Map의 1-Row에 해당하는 값을 한번에 바꿔주는 형식으로 합니다.)</li>
+    <li>색인화 된 이미지 행렬을 ‘P’ mode로 저장합니다.(<strong>P</strong> mode는 <strong>Palette</strong> 모드입니다.)</li>
+    <li>위에서 생성한 Palette를 넣어줍니다.</li>
+    <li>png format으로 이미지를 저장합니다.</li>
+  </ol>
+</blockquote>
+
+<p>이렇게 하면 Palette 정보가 있는 색인화 된 이미지 파일을 생성할 수 있습니다.</p>
+
+<p>이렇게 생성된 이미지 파일은 바로 Semantic Segmentation의 학습에 사용 가능하며, Predict 함수에서 출력된 결과를 저장할 때도 이러한 방식으로 저장하여 성능 측정이 가능합니다.</p>
+
+<hr />
+
+<h2 id="5-result">5. Result</h2>
+<ol>
+  <li>Semantic Segmentation의 Label Image 생성 시, 일반적인 이미지 저장 방식으로 저장하면 안됩니다.</li>
+  <li>Color Map과 Palette 정보가 포함된, Indexed Image를 제작해야 합니다.</li>
+  <li>그 이유는 Segmentation 학습이 CE Loss를 사용하는데, 여기서 1-Pixel에 대해 1개의 값(=label value)을 비교하기 때문입니다.</li>
+  <li>사용자가 Augmentation 혹은 Annotation 시에, 특정 Color Map을 생성 후에 Pixel의 Label Value에 색인화 시켜주는 작업이 필요합니다. 
+(상단 소스코드 참조)</li>
+</ol>]]></content><author><name>bolero2</name></author><category term="DeepLearning" /><summary type="html"><![CDATA[Semantic Segmentation에서 사용하는 라벨링 데이터에 대해 알아보고, 어떻게 제작할 수 있는지 알아봅니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/img/segmentation_label.png" /><media:content medium="image" url="http://localhost:4000/img/segmentation_label.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">[Paper] DETR - End-to-End Object Detection with Transformer</title><link href="http://localhost:4000/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/" rel="alternate" type="text/html" title="[Paper] DETR - End-to-End Object Detection with Transformer" /><published>2022-01-12T00:00:00+09:00</published><updated>2022-01-12T00:00:00+09:00</updated><id>http://localhost:4000/paper/2022/01/12/%5BPaper%5D-DETR%20-%20End-to-End-Object-Detection-with-Transformer</id><content type="html" xml:base="http://localhost:4000/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/"><![CDATA[<h1 id="detr---end-to-end-object-detection-with-transformer">DETR - End-to-End Object Detection with Transformer</h1>
+
+<p>이번에 소개할 논문은 Facebook AI 팀에서 공개한<br />
+Transformer 방식을 Computer Vision의 Object Detection 분야에 적용시킨 <strong>DETR</strong>입니다.</p>
+
+<p>DETR은 <strong>DE</strong>tection + <strong>TR</strong>ansformer 의 줄임말로, 이름에서부터 Transformer가 Detection 방식에 사용됨을 유추할 수 있습니다.</p>
+
+<p>논문 제목에서 <strong>End-to-End</strong> 라는 말의 의미는,<br />
+(뒤에 등장하지만)기존 Detection Network가 가지고 있는 초매개변수(<strong>Hyper-Parameter</strong>, ex. NMS, threshold, anchor-box etc.)를<br />
+Transformer의 End-to-End 방식의 학습을 통해 없앴다고 볼 수 있습니다.</p>
+
+<hr />
+
+<h2 id="1-abstract">1. Abstract</h2>
+
+<p>논문에서 크게 주장하는 핵심은 다음과 같습니다:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1. 사용자가 설정해야 하는 것(Hand-designed Components) 을 제거  
+2. Simple한 Network 구성  
+3. 이분법적 매칭(Bipartite Matching)과 Transformer의 Encoder-Decoder 구조 사용  
+</code></pre></div></div>
+<p>추가적으로, Object Detection 분야 뿐 만 아니라<br />
+<strong>Panoptic Segmentation(a.k.a Instance Segmentation)</strong> 분야에서도 좋은 성능을 보여준다고 합니다.</p>
+
+<hr />
+
+<h2 id="2-model-architecture">2. Model Architecture</h2>
+
+<p>네트워크의 전체적인 구성은 다음과 같습니다:</p>
+
+<p><img src="https://user-images.githubusercontent.com/41134624/105303525-e6fb9400-5bfe-11eb-947c-ef4939938df6.jpg" alt="model1" /></p>
+
+<p>해당 네트워크는 크게 본다면</p>
+<blockquote>
+  <p>1) <strong>C</strong>onvolution <strong>N</strong>eural <strong>N</strong>etwork(ResNet)
+2) <strong>Transformer</strong> Encoder
+3) <strong>Transformer</strong> Decoder
+4) <strong>F</strong>eed-<strong>F</strong>oward <strong>N</strong>etwork(FFN)</p>
+</blockquote>
+
+<p>이렇게 4단계로 구분할 수 있습니다.</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>DETR은 이 4단계를 통해 입력 데이터를 곧바로 분류 정보 및 bbox 정보를 추론 하기 때문에,  
+NMS와 같은 사용자의 입력 값을 요구하는 알고리즘이 필요하지 않습니다.
+</code></pre></div></div>
+
+<h3 id="1-convolution-neural-network">1) Convolution Neural Network</h3>
+
+<p>CNN의 주 목적은 입력 영상 데이터의 <em><strong>특징 추출</strong></em> 입니다.<br />
+논문에서 사용한 CNN(=Backbone)은 ResNet으로,<br />
+<strong>3ch * W * H</strong> 영상 데이터가 입력으로 들어온 후 &gt; 최종 <strong>2048ch * W/32 * H/32</strong> 크기의 Feature Map을 생성합니다.</p>
+
+<p><img src="https://user-images.githubusercontent.com/41134624/105318677-262de300-5c07-11eb-983c-c26c68abe782.jpg" alt="resnet" /></p>
+
+<p>저자는 Backbone CNN으로 ResNet50 모델을 사용하였는데,<br />
+해당 모델의 맨 마지막 channel 깊이는 <strong>2048</strong>임을 알 수 있습니다.</p>
+
+<h3 id="2-transformer-encoder">2) Transformer Encoder</h3>
+
+<p>CNN을 거쳐 생성된 Feature Map은 1x1 convolution을 통해 <strong>d 차원</strong>(=d 채널)으로 축소됩니다.</p>
+<blockquote>
+  <ul>
+    <li><em><strong>Encoder는 Sequence Data를 입력으로 받기 때문에, Vectorizing함을 알 수 있습니다.</strong></em></li>
+    <li><em><strong>또한, 축소 된 d 채널은 Spatial하게 분리하여 H*W 크기로 구성된 d 개의 조각으로 분리할 수 있습니다.</strong></em></li>
+  </ul>
+</blockquote>
+
+<p>2) Transformer Encoder
+CNN을 거쳐 생성된 Feature Map은 1x1 convolution을 통해 d 차원(=d 채널)으로 축소됩니다.</p>
+
+<p>Encoder는 Sequence Data를 입력으로 받기 때문에, Vectorizing함을 알 수 있습니다.
+또한, 축소 된 d 채널은 Spatial하게 분리하여 H*W 크기로 구성된 d 개의 조각으로 분리할 수 있습니다.</p>
+
+<p>각각의 d개 조각은 Encoder Layer의 입력으로 Sequencial하게 들어가며, Encoder Layer는 기본적인 구조로 구성되어 있습니다.</p>
+<blockquote>
+  <ul>
+    <li><em><strong>Encoder Layer는 Multi-head Self-attention module로 구성되어 있습니다.</strong></em></li>
+  </ul>
+</blockquote>
+
+<p>Encoder에서 살펴 볼 것은 다음과 같습니다:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 원래 Transformer는 입력 데이터의 순서가 출력 데이터에 영향을 주지 않습니다.
+* 하지만 Vision 문제에서는 분리 된 d개의 조각에 대한 순서다가 중요하기 때문에 각각의 Attention Layer마다 Position Embedding을 실시합니다.
+</code></pre></div></div>
+
+<h3 id="3-transformer-decoder">3) Transformer Decoder</h3>
+
+<p>Decoder 역시 Encoder와 동일하게 Standard한 구조를 따릅니다.<br />
+Encoder의 출력으로 d size의 N Embedding이 나오고, 이는 그대로 Decoder의 입력으로 들어갑니다.</p>
+
+<p>Decoder에서 살펴 볼 것은 다음과 같습니다:</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* 원래의 Decoder는 분리 된 d 개의 조각을 하나의 Sequence로 보고, 통째로 입력 데이터로 들어갑니다.
+* 하지만 DETR에서는 각각의 Decoder Layer마다 N 개의 Embedding 객체를 Parallel하게 Decoding합니다.
+* 또한, Encoder처럼 각각의 Attention Layer에 Object Query를 추가하여 Position Embedding과 유사한 작업을 합니다.
+</code></pre></div></div>
+
+<h3 id="4-feed-foward-networkffn">4) Feed-Foward Network(FFN)</h3>
+
+<p>FFN 같은 경우는 단순한 구조로 되어 있습니다:</p>
+<blockquote>
+  <ul>
+    <li>3 Layer의 Perceptron으로 구성되어 있습니다.</li>
+    <li>각각의 Perceptron은 ReLU 활성화 함수와 d 차원의 은닉층, 1개의 Linear Projection으로 되어 있습니다.</li>
+  </ul>
+</blockquote>
+
+<p>또한, FFN을 거치게 되면 Predict한 값이 나오게 되는데, 이 값은 다음과 같습니다:</p>
+<blockquote>
+  <p>1) Center X (relative)
+2) Center Y (relative)
+3) Height (relative)
+4) Width (relative)</p>
+</blockquote>
+
+<p>(Relative한 좌표는 픽셀의 개수를 count하는 절대 좌표가 아닌, 이미지 전체의 H/W에 비례하는 0과 1사이의 좌표 값입니다.)</p>
+
+<p>FFN은 Softmax 함수를 통해 분류 라벨 또한 Predict 합니다.<br />
+Predict 할 때, Ground-Truth 개수가 5개이고, Detection 객체 개수가 7개라면<br />
+Ground-Truth 쪽에 2개의 (no object)를 만들어줍니다.</p>
+
+<p><img src="https://user-images.githubusercontent.com/41134624/105328912-e5889680-5c13-11eb-8a99-9e9e822a3da2.jpg" alt="label_predict" /></p>
+
+<p>그림과 같이, 4개의 객체를 검출했다면, 2개는 (no object) 항목으로 할당하고 2개는 정답으로 처리하여 <strong>이분법(bipartite)적으로 처리하게 됩니다.</strong></p>
+
+<hr />
+
+<h2 id="3-experiments">3. Experiments</h2>
+
+<p>실험 조건은 다음과 같습니다:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Item</th>
+      <th style="text-align: center">Content</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">Comparison Network</td>
+      <td style="text-align: center">Faster-RCNN</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Optimizer</td>
+      <td style="text-align: center">AdamW</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Backbone</td>
+      <td style="text-align: center">ResNet-50, ResNet-101</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Epoch</td>
+      <td style="text-align: center">300</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">Dataset</td>
+      <td style="text-align: center">COCO 2017</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>실험에 사용된 Dataset은 <a href="https://cocodataset.org/#home">COCO 2017</a>의 detection + segmentation 데이터 세트 입니다.<br />
+Segmentation은 Panoptic Segmentation의 성능 측정을 위해 사용하였습니다.</p>
+
+<p><img src="https://user-images.githubusercontent.com/41134624/105329673-bf172b00-5c14-11eb-8ca7-468b4020761e.jpg" alt="exp1" /></p>
+
+<p>그림에서 보는 것과 같이,</p>
+<ol>
+  <li>대부분의 상황에서 DETR의 parameter 개수가 현저히 낮음을 알 수 있으며,</li>
+  <li>Average Precision은 6 case 중 4 case에서 Faster-RCNN보다 높음을 알 수 있습니다.</li>
+</ol>
+
+<p>여기서 Faster-RCNN이 높은 케이스 중, AP-Small size는 Faster-RCNN이 27.2로 23.7의 DETR보다 우월하게 높습니다.</p>
+
+<p><strong>즉, DETR은 작은 Object에 대해서 상대적으로 약함을 보입니다.</strong></p>
+
+<hr />
+
+<h2 id="4-source-code">4. Source Code</h2>
+
+<p>논문의 저자는 Paper 맨 뒤에 간단한 구현 코드를 공개했습니다.<br />
+Abstract에서 말한 것처럼, 코드는 매우 간단한 구조로 되어 있습니다:</p>
+
+<p><img src="https://user-images.githubusercontent.com/41134624/105314318-75711500-5c01-11eb-98b2-90eae749d3d0.jpg" alt="code" /></p>
+
+<p>이 코드에서 우리는 ResNet-50 모델을 사용한 것과, 내부 프레임워크에서 제공하는 수준의 Transformer 함수를 그대로 사용한 것을 알 수 있습니다.</p>
+
+<hr />
+
+<p><strong>(Paper Review는 제가 스스로 읽고 작성한 글이므로, 주관적인 내용임을 밝힙니다.)</strong></p>]]></content><author><name>bolero2</name></author><category term="Paper" /><summary type="html"><![CDATA[Facebook AI 팀에서 발표한, Transformer를 Object Detection task에 사용한 논문입니다.]]></summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="http://localhost:4000/img/detr.png" /><media:content medium="image" url="http://localhost:4000/img/detr.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

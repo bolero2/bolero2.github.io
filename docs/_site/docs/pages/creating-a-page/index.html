@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+
+
+
+<html
+ dir="ltr"
+ lang="en"
+ >
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content=#ffffff>
+    <link rel="stylesheet" href="/assets/css/app.css">
+    <link rel="shortcut icon" type="image/png"
+           href="/favicon.png" 
+    />
+    <script defer src="https://unpkg.com/alpinejs@3.9.0/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5/css/all.min.css">
+    
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@1/bin/bulma-social.min.css">
+    
+    <!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Creating A Page | bolero2.log</title>
+<meta name="generator" content="Jekyll v4.2.2" />
+<meta property="og:title" content="Creating A Page" />
+<meta property="og:locale" content="en" />
+<meta name="description" content="””" />
+<meta property="og:description" content="””" />
+<link rel="canonical" href="http://localhost:4000/docs/pages/creating-a-page/" />
+<meta property="og:url" content="http://localhost:4000/docs/pages/creating-a-page/" />
+<meta property="og:site_name" content="bolero2.log" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Creating A Page" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage","description":"””","headline":"Creating A Page","url":"http://localhost:4000/docs/pages/creating-a-page/"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <!-- head scripts --></head>
+
+  <body>
+    <nav class="navbar is-primary " x-data="{ openNav: false }">
+    <div class="container">
+        <div class="navbar-brand">
+            <a href="/" class="navbar-item">
+                bolero2.log
+            </a>
+            <a role="button" class="navbar-burger burger" aria-label="menu" aria-expanded="false" data-target="navMenu" :class="{ 'is-active': openNav }" x-on:click="openNav = !openNav">
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+                <span aria-hidden="true"></span>
+            </a>
+        </div>
+        <div class="navbar-menu" id="navMenu" :class="{ 'is-active': openNav }">
+            <div class="navbar-start">
+                <a href="/" class="navbar-item ">Home</a>
+                
+                
+                    
+                    <a href="/docs/" class="navbar-item ">Docs</a>
+                    
+                
+                    
+                    <div class="navbar-item has-dropdown is-hoverable ">
+                        <a href="/" class="navbar-link ">Example Pages</a>
+                        <div class="navbar-dropdown">
+                            
+                            <a href="/landing/" class="navbar-item ">Landing Page With Callouts</a>
+                            
+                            <a href="/sponsors/" class="navbar-item ">Sponsors Page</a>
+                            
+                            <a href="/gallery/" class="navbar-item ">Image Gallery</a>
+                            
+                            <a href="/products/" class="navbar-item ">Products</a>
+                            
+                            <a href="/example-recipe/" class="navbar-item ">Recipe Page</a>
+                            
+                            <a href="/showcase/" class="navbar-item ">Showcase</a>
+                            
+                        </div>
+                    </div>
+                    
+                
+                    
+                    <a href="/blog/" class="navbar-item ">Blog</a>
+                    
+                
+                
+            </div>
+
+            <div class="navbar-end">
+                
+                <a class="navbar-item" href="https://github.com/sponsors/chrisrhymes">
+                    <span class="icon gh-sponsor"><i class="fas fa-heart"></i></span>
+                    <span>Sponsor</span>
+                </a>
+                
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+    
+        <section class="hero  is-medium  is-bold is-primary" >
+    <div class="hero-body ">
+        <div class="container">
+            <h1 class="title is-2">Creating A Page</h1>
+            <p class="subtitle is-3">Pages</p>
+            
+        </div>
+    </div>
+</section>
+    
+    
+
+
+    <section class="section">
+        <div class="container">
+            <div class="columns is-multiline">
+                
+                <div class="column is-4-desktop is-4-tablet">
+                    
+
+<aside class="menu">
+
+    <p class="menu-label">Getting Started</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/getting-started/installation/" class="">Installation</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/getting-started/configuration/" class="">Configuration</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/getting-started/theming/" class="">Theming</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/getting-started/sidebar/" class="">Sidebar</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/getting-started/scripts/" class="">Scripts</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Navigation</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/navigation/top-navigation/" class="">Top navigation</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/navigation/footer-navigation/" class="">Footer navigation</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/navigation/menubar/" class="">Menubar</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Pages</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/pages/creating-a-page/" class="is-active">Creating a page</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/pages/hero/" class="">Hero</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/pages/table-of-contents/" class="">Table of Contents</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Posts</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/posts/creating-a-post/" class="">Creating a Post</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/posts/post-excerpt-summary/" class="">Excerpt & Summary</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/posts/post-series/" class="">Series</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Page Components</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/page-components/callouts/" class="">Callouts</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/image-gallery/" class="">Image Gallery</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/image-modal/" class="">Image Modal</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/notifications/" class="">Notifications</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/showcases/" class="">Showcases</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/sponsors/" class="">Sponsors</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/tabs/" class="">Tabs</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/tags/" class="">Tags</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/page-components/video/" class="">Video</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Products</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/products/product-pages/" class="">Product Pages</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/products/product-reviews/" class="">Product Reviews</a>
+            
+        </li>
+        
+        <li>
+            <a href="/docs/products/category-page/" class="">Category Page</a>
+            
+        </li>
+            
+    </ul>
+
+    <p class="menu-label">Recipes</p>
+    <ul class="menu-list">
+        
+        <li>
+            <a href="/docs/recipes/recipes/" class="">Recipes</a>
+            
+        </li>
+            
+    </ul>
+
+</aside>
+                </div>
+                
+                <div class="column is-8">
+                    
+                    
+                    
+                    
+                    
+    
+    
+
+<div class="contents">
+    <div class="menu">
+        <p class="menu-label">Contents</p>
+        <ul class="menu-list">
+  <li><a href="#creating-a-page">Creating A Page</a></li>
+  <li><a href="#front-matter">Front Matter</a></li>
+  <li><a href="#search-engine-optimisation">Search Engine Optimisation</a></li>
+</ul>
+    </div>
+</div>
+
+
+
+
+<div class="content">
+    <h2 id="creating-a-page">Creating A Page</h2>
+
+<p>Create your pages as individual Markdown files and when the site is built by Jekyll it will process the markdown into html.</p>
+
+<p>You can create subdirectories with files in and they will have the subdirectory in their path. For example, this page is in the <code class="language-plaintext highlighter-rouge">docs</code> subdirectory and is called <code class="language-plaintext highlighter-rouge">creating-a-page.md</code>. This will become <code class="language-plaintext highlighter-rouge">/docs/creating-a-page.html</code>, or <code class="language-plaintext highlighter-rouge">/docs/creating-a-page/</code> depending on your permalink settings.</p>
+
+<h2 id="front-matter">Front Matter</h2>
+
+<p>Ensure you use <code class="language-plaintext highlighter-rouge">layout: page</code> for normal pages.</p>
+
+<p>Set the page’s title and subtitle in the front matter and it will appear in the hero. The subtitle is optional.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">layout</span><span class="pi">:</span> <span class="s">page</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">The page title</span>
+<span class="na">subtitle</span><span class="pi">:</span> <span class="s">The page subtitle</span>
+</code></pre></div></div>
+
+<h2 id="search-engine-optimisation">Search Engine Optimisation</h2>
+
+<p>Bulma Clean Theme uses Jekyll SEO tag to generate additional meta tags. Ensure each page and post has a unique title and description in the front matter.</p>
+
+<p>You can also set an image that will be used when the page or post is shared on social media.</p>
+
+<div class="language-yaml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">layout</span><span class="pi">:</span> <span class="s">page</span>
+<span class="na">title</span><span class="pi">:</span> <span class="s">The page title</span>
+<span class="na">subtitle</span><span class="pi">:</span> <span class="s">The page subtitle</span>
+<span class="na">description</span><span class="pi">:</span> <span class="s">This is the meta description for this page and will help it appear in search engines</span>
+<span class="na">image</span><span class="pi">:</span> <span class="s">/img/page-image.jpg</span>
+</code></pre></div></div>
+
+
+</div>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+    
+        <footer class="footer">
+    <div class="container">
+        
+        
+        <div class="columns is-multiline">
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="/" class="link">Home</a>
+                </div>
+            </div>
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="/blog/" class="link">Blog</a>
+                </div>
+            </div>
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="/products/" class="link">Products</a>
+                </div>
+            </div>
+            
+            <div class="column has-text-centered">
+                <div>
+                    <a href="/privacy-policy/" class="link">Privacy Policy</a>
+                </div>
+            </div>
+            
+        </div>
+        
+
+        <div class="content is-small has-text-centered">
+            <p class="">Theme built by <a href="https://www.csrhymes.com">C.S. Rhymes</a></p>
+        </div>
+    </div>
+</footer>
+
+    
+    <script src="/assets/js/app.js" type="text/javascript"></script><!-- footer scripts --></body>
+</html>
