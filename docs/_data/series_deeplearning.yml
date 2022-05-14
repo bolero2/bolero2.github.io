@@ -1,0 +1,9 @@
+# Docs: https://www.csrhymes.com/bulma-clean-theme/docs/posts/post-series/
+
+title: Deep Learning
+# description: The series description text
+sections:
+  - label: ""
+    items:
+      - title: "[DL] NMS, Non-Maximum Suppression 파헤치기"
+      - title: "[DL] Semantic Segmentation에서 Label Image 생성하기"

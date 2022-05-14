@@ -1,11 +1,12 @@
 ---
 layout: post
-title:  "[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching"
+title:  "[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching"
 date:   2022-05-07
 categories: Paper
 description: "Semantic Segmentation에서 사용하는 라벨링 데이터에 대해 알아보고, 어떻게 제작할 수 있는지 알아봅니다."
 image: '/img/thumbnail-ganet.png'
 published: true
+series: series_paper
 ---
 
 {% include tag.html tag="Paper" %}
@@ -27,8 +28,7 @@ GA-Net은 그들만의 방법으로 Computing cost를 줄이고, 성능을 향�
 
 ## 1. Stereo Matching?
 * Disparity Estimation
-* 각각 다른 시선에서 픽셀들을 매칭시키는 것.![업로드중..](blob:https://velog.io/22175641-b903-4a60-83c0-bc1328973e84)
-
+* 각각 다른 시선에서 픽셀들을 매칭시키는 것.  
 
 ![](https://velog.velcdn.com/images/bolero2/post/6e9cb1c3-067f-4e21-ab5a-b9e3a22d7516/image.png)
 

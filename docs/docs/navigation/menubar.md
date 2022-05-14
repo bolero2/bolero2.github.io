@@ -13,7 +13,7 @@ redirect_from:
 
 The menubar is a menu in a column on the left of the page. The menubar gets its content from a data file in your site's `_data` directory. Set the name of your data file in the page's menubar setting in the front matter. 
 
-If you have a file `_data/example_menu.yml` then set the menubar to `example_menu`.
+If you have a file `_data/example_menu.yml` then set the menubar to ``.
 
 ```yaml
 show_sidebar: false

@@ -6,6 +6,7 @@ categories: Paper
 description: "Facebook AI 팀에서 발표한, Transformer를 Object Detection task에 사용한 논문입니다."
 image: '/img/thumbnail-detr.png'
 published: true
+series: series_paper
 ---
 
 {% include tag.html tag="Paper" %}

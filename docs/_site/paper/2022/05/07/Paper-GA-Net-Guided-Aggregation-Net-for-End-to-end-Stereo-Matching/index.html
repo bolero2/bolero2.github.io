@@ -6,7 +6,7 @@
 <html
  dir="ltr"
  lang="en"
- class="has-navbar-fixed-top">
+ class="has-navbar-fixed-lrt">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,9 +21,9 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma-social@1/bin/bulma-social.min.css">
     
     <!-- Begin Jekyll SEO tag v2.8.0 -->
-<title>[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching | bolero2.log</title>
+<title>[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching | bolero2.log</title>
 <meta name="generator" content="Jekyll v4.2.2" />
-<meta property="og:title" content="[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching" />
+<meta property="og:title" content="[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching" />
 <meta name="author" content="bolero2" />
 <meta property="og:locale" content="en" />
 <meta name="description" content="Semantic Segmentation에서 사용하는 라벨링 데이터에 대해 알아보고, 어떻게 제작할 수 있는지 알아봅니다." />
@@ -36,9 +36,9 @@
 <meta property="article:published_time" content="2022-05-07T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="http://localhost:4000/img/thumbnail-ganet.png" />
-<meta property="twitter:title" content="[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching" />
+<meta property="twitter:title" content="[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching" />
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"bolero2"},"dateModified":"2022-05-07T00:00:00+09:00","datePublished":"2022-05-07T00:00:00+09:00","description":"Semantic Segmentation에서 사용하는 라벨링 데이터에 대해 알아보고, 어떻게 제작할 수 있는지 알아봅니다.","headline":"[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching","image":"http://localhost:4000/img/thumbnail-ganet.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/"},"url":"http://localhost:4000/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/"}</script>
+{"@context":"https://schema.org","@type":"BlogPosting","author":{"@type":"Person","name":"bolero2"},"dateModified":"2022-05-07T00:00:00+09:00","datePublished":"2022-05-07T00:00:00+09:00","description":"Semantic Segmentation에서 사용하는 라벨링 데이터에 대해 알아보고, 어떻게 제작할 수 있는지 알아봅니다.","headline":"[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching","image":"http://localhost:4000/img/thumbnail-ganet.png","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/"},"url":"http://localhost:4000/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/"}</script>
 <!-- End Jekyll SEO tag -->
 
     <script async src="https://www.googletagmanager.com/gtag/js?id=3563142385"></script>
@@ -51,7 +51,7 @@
 </script><!-- head scripts --></head>
 
   <body>
-    <nav class="navbar is-primary  is-fixed-top " x-data="{ openNav: false }">
+    <nav class="navbar is-primary  is-fixed-lrt " x-data="{ openNav: false }">
     <div class="container">
         <div class="navbar-brand">
             <a href="/" class="navbar-item">
@@ -86,6 +86,23 @@
                     
                 
                     
+                    <div class="navbar-item has-dropdown is-hoverable ">
+                        <a href="/" class="navbar-link ">Published papers</a>
+                        <div class="navbar-dropdown">
+                            
+                            <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002429571" class="navbar-item ">이중흐름 3차원 합성곱 신경망 구조를 이용한 효율적인 손 제스처 인식 방법</a>
+                            
+                            <a href="https://github.com/bolero2/bolero2/blob/main/papers/%5BKSC2018%5D%20실시간%20손%20제스처%20인식을%20위한%20덴스넷%20기반%20이중흐름%203차원%20합성곱%20신경망%20구조.pdf" class="navbar-item ">실시간 손 제스처 인식을 위한 덴스넷 기반 이중흐름 3차원 합성곱 신경망 구조</a>
+                            
+                            <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002529690" class="navbar-item ">Atrous Convolution과 Grad-CAM을 통한 손 끝 탐지</a>
+                            
+                            <a href="https://www.earticle.net/Article/A379292" class="navbar-item ">실시간 손끝 탐지를 위한 VGGNet 기반 객체 탐지 네트워크</a>
+                            
+                        </div>
+                    </div>
+                    
+                
+                    
                     <a href="https://github.com/bolero2" class="navbar-item ">Github Profile</a>
                     
                 
@@ -109,7 +126,7 @@
         <section class="hero  is-medium  is-bold is-primary" >
     <div class="hero-body ">
         <div class="container">
-            <h1 class="title is-2">[Papers] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching</h1>
+            <h1 class="title is-2">[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching</h1>
             <p class="subtitle is-3"></p>
             
         </div>
@@ -154,7 +171,53 @@
                     
                     <div class="content">
 
-    <p>Published: May 7, 2022 by bolero2</p>
+    <p><b>Published:</b> May 7, 2022 : by <b>bolero2</b></p>
+
+    
+        
+
+
+<p class="title is-5 is-spaced">Paper Review</p>
+
+
+
+
+
+
+    <p class="title is-6"></p>
+
+
+<ul class="block-list is-small is-outlined">
+    
+        
+
+        
+            <li>
+                <a href="/paper/2022/05/03/Paper-Better-plain-ViT-baselines-for-ImageNet-1k/" class="is-flex" >[Paper] Better plain ViT baselines for ImageNet-1k</a>
+            </li>
+        
+
+    
+        
+
+        
+            <li class="is-highlighted is-dark">
+                <p>[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching</p>
+            </li>
+        
+
+    
+        
+
+        
+            <li>
+                <a href="/paper/2022/01/12/Paper-DETR-End-to-End-Object-Detection-with-Transformer/" class="is-flex" >[Paper] DETR - End-to-End Object Detection with Transformer</a>
+            </li>
+        
+
+    
+</ul>
+
 
     
 
@@ -181,7 +244,7 @@
 <h2 id="1-stereo-matching">1. Stereo Matching?</h2>
 <ul>
   <li>Disparity Estimation</li>
-  <li>각각 다른 시선에서 픽셀들을 매칭시키는 것.<img src="blob:https://velog.io/22175641-b903-4a60-83c0-bc1328973e84" alt="업로드중.." /></li>
+  <li>각각 다른 시선에서 픽셀들을 매칭시키는 것.</li>
 </ul>
 
 <p><img src="https://velog.velcdn.com/images/bolero2/post/6e9cb1c3-067f-4e21-ab5a-b9e3a22d7516/image.png" alt="" /></p>
@@ -288,7 +351,7 @@
         <span class="icon"><i class="fab fa-twitter fa-lg"></i></span>
     </a>
     <a class="button is-medium is-linkedin"
-       onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/&title=%5BPapers%5D+GA-Net%3A+Guided+Aggregation+Net+for+End-to-end+Stereo+Matching&summary=&source=');">
+       onclick="window.open('https://www.linkedin.com/shareArticle?mini=true&url=http://localhost:4000/paper/2022/05/07/Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching/&title=%5BPaper%5D+GA-Net%3A+Guided+Aggregation+Net+for+End-to-end+Stereo+Matching&summary=&source=');">
         <span class="icon"><i class="fab fa-linkedin fa-lg"></i></span>
     </a>
     <a class="button is-medium is-reddit"

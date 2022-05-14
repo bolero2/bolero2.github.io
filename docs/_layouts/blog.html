@@ -5,17 +5,24 @@ layout: default
 {{ content }}
 
 <div class="columns is-multiline">
+    <!-- 위쪽 previous, next 부분 -->
     <div class="column is-12">
         {% include pagination.html %}
     </div>
+
+    <!-- post 나열 부분 -->
     {% for post in paginator.posts %}
     <div class="column is-12">
         {% include post-card.html %}
     </div>
     {% endfor %}
+
+    <!-- 아래쪽 previous, next 부분 -->
     <div class="column is-12">
         {% include pagination.html %}
     </div>
+    
+    <!-- subscribe 버튼 -->
     <div class="column is-12">
         {% include subscribe.html %}
     </div>

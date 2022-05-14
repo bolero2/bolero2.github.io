@@ -1,0 +1,11 @@
+# Docs: https://www.csrhymes.com/bulma-clean-theme/docs/posts/post-series/
+
+title: Paper Review
+# description: The series description text
+sections:
+  - label: ""
+    items:
+      - title: "[Paper] Better plain ViT baselines for ImageNet-1k"
+      - title: "[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching"
+      - title: "[Paper] DETR - End-to-End Object Detection with Transformer"
+

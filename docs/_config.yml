@@ -10,9 +10,11 @@ url: "https://bolero2.dev"
 permalink: pretty
 favicon: /favicon.png
 gh_sponsor: bolero2
-#hide_share_buttons: true
-#theme_color: '#eeeeee'
-fixed_navbar: top
+# theme_color: '#'
+# hide_share_buttons: true
+# theme_color: '#ff0000'
+# theme_color: '#000000'
+fixed_navbar: lrt
 # direction: one of <ltr, rtl, auto>, default: ltr
 direction: ltr
 
@@ -52,7 +54,7 @@ sass:
   style: compressed
   source_dir: _sass
 
-google_analytics: 3563142385
+google_analytics: 3563142385    # UA-228665215-2
 
 defaults:
   -
@@ -68,10 +70,11 @@ defaults:
     values:
       author: "bolero2"
       layout: post
-      image: https://via.placeholder.com/1200x800
+      image: https://via.placeholder.com/400x200
       show_sidebar: false     # Latest post 보여줌
       menubar_toc: true       # 왼쪽에 1. ~~~ , 2. ~~~ 이런거 제목 생기는거
       toc: true
+      toc_title: "Contents"
 
 markdown: kramdown
 highlighter: rouge

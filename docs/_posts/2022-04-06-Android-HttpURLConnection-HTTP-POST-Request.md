@@ -6,6 +6,7 @@ categories: Android
 description: "HttpURLConnection 클래스를 활용하여 HTTP 서버에 POST 요청하는 방법입니다."
 image: '/img/thumbnail-android_https.png'
 published: true
+series: series_android
 ---
 
 {% include tag.html tag="Android" %}

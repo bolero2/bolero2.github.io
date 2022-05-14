@@ -6,7 +6,7 @@
 <html
  dir="ltr"
  lang="en"
- class="has-navbar-fixed-top">
+ class="has-navbar-fixed-lrt">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,7 +48,7 @@
 </script><!-- head scripts --></head>
 
   <body>
-    <nav class="navbar is-primary  is-fixed-top " x-data="{ openNav: false }">
+    <nav class="navbar is-primary  is-fixed-lrt " x-data="{ openNav: false }">
     <div class="container">
         <div class="navbar-brand">
             <a href="/" class="navbar-item">
@@ -77,6 +77,23 @@
                             <a href="https://github.com/bolero2/vggnet-torch" class="navbar-item ">vggnet-pytorch</a>
                             
                             <a href="https://github.com/bolero2/deeplab-v3-torch" class="navbar-item ">deeplab-v3-pytorch</a>
+                            
+                        </div>
+                    </div>
+                    
+                
+                    
+                    <div class="navbar-item has-dropdown is-hoverable ">
+                        <a href="/" class="navbar-link ">Published papers</a>
+                        <div class="navbar-dropdown">
+                            
+                            <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002429571" class="navbar-item ">이중흐름 3차원 합성곱 신경망 구조를 이용한 효율적인 손 제스처 인식 방법</a>
+                            
+                            <a href="https://github.com/bolero2/bolero2/blob/main/papers/%5BKSC2018%5D%20실시간%20손%20제스처%20인식을%20위한%20덴스넷%20기반%20이중흐름%203차원%20합성곱%20신경망%20구조.pdf" class="navbar-item ">실시간 손 제스처 인식을 위한 덴스넷 기반 이중흐름 3차원 합성곱 신경망 구조</a>
+                            
+                            <a href="https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002529690" class="navbar-item ">Atrous Convolution과 Grad-CAM을 통한 손 끝 탐지</a>
+                            
+                            <a href="https://www.earticle.net/Article/A379292" class="navbar-item ">실시간 손끝 탐지를 위한 VGGNet 기반 객체 탐지 네트워크</a>
                             
                         </div>
                     </div>
@@ -128,6 +145,7 @@
                     
 
 <div class="columns is-multiline">
+    <!-- 위쪽 previous, next 부분 -->
     <div class="column is-12">
         <nav class="pagination is-centered">
     
@@ -150,6 +168,8 @@
 </nav>
 
     </div>
+
+    <!-- post 나열 부분 -->
     
     <div class="column is-12">
         <div class="card">
@@ -250,6 +270,8 @@
 </div>
     </div>
     
+
+    <!-- 아래쪽 previous, next 부분 -->
     <div class="column is-12">
         <nav class="pagination is-centered">
     
@@ -272,6 +294,8 @@
 </nav>
 
     </div>
+    
+    <!-- subscribe 버튼 -->
     <div class="column is-12">
         <div class="has-text-centered">
     <a href="/feed.xml" class="button is-primary">

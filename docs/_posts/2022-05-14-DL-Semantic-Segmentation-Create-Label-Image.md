@@ -6,6 +6,7 @@ categories: DeepLearning
 description: "Semantic Segmentation에서 사용하는 라벨링 데이터에 대해 알아보고, 어떻게 제작할 수 있는지 알아봅니다."
 image: '/img/thumbnail-segmentation_label.png'
 published: true
+series: series_deeplearning
 ---
 
 {% include tag.html tag="DeepLearning" %}

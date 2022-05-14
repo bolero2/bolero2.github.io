@@ -6,6 +6,7 @@ categories: DeepLearning
 description: "Object Detection에서 사용하는 NMS(Non-Maximum Suppression, 비 최대 억제 알고리즘)에 대해 알아보고, 간단한 코드를 작성하여 실습해봅니다."
 image: '/img/thumbnail-nms.jpg'
 published: true
+series: series_deeplearning
 ---
 
 {% include tag.html tag="DeepLearning" %}
