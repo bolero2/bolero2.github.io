@@ -54,7 +54,7 @@ sass:
   style: compressed
   source_dir: _sass
 
-google_analytics: UA-228665215-2
+google_analytics: 3563142385    # UA-228665215-2
 
 defaults:
   -
@@ -71,7 +71,7 @@ defaults:
       author: "bolero2"
       layout: post
       # image: https://via.placeholder.com/800x600
-      show_sidebar: true     # /blog sidebar -> /blog/index.html, 이거는 각 post 내에 사이드바 여부
+      show_sidebar: false     # /blog sidebar -> /blog/index.html, 이거는 각 post 내에 사이드바 여부
       menubar_toc: true       # 페이지 왼쪽에 Contents[1. XXX | 2. XXX] 이런거 항목 이동 생기는거
       toc: true
       toc_title: "Contents"
