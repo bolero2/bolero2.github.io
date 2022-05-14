@@ -9,6 +9,7 @@ menubar_toc: true
 toc_title: ABOUTME.md   # 옆에 [content] 생기는 상자 제목임.
 ---
 
+<!-- <link href="https://github.com/bolero2/bolero2/blob/main/README.md" rel="stylesheet"> -->
 
 ## 🧐 bolero2
 

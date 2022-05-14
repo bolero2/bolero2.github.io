@@ -1,7 +1,9 @@
+<!-- text-align : center; -->
+
 <div class="card">
     {% if post.image %}
-    <div class="card-image">
-        <img src="{{ post.image }}" alt="{{ post.title }}">
+    <div class="card-image" style="display:block;margin:auto;text-align:center">
+        <img src="{{ post.image }}" width="50%" height="50%" alt="{{ post.title }}">
     </div>
     {% else %}
     <header class="card-header">
@@ -11,12 +13,10 @@
     <div class="card-content">
         <div class="content">
             {% if post.image %}
-            <a class="title is-4" href="{{ site.baseurl }}{{ post.url }}">{{ post.title}}</a>
+            <a class="title is-3" href="{{ site.baseurl }}{{ post.url }}" style='line-height:135%'>{{ post.title}}</a><br><br>
             {% endif %}
-            {% if post.summary %}
-                {{ post.summary | markdownify }}
-            {% else %}
-                <p>{{ post.excerpt }}</p>
+            {% if post.description %}
+                <div class="subtitle is-5">{{ post.description | markdownify }}</div>
             {% endif %}
         </div>
         <div class="has-text-centered">

@@ -8,5 +8,21 @@
     {% endfor %}
 </div>
 
+<!-- <aside class="menu">
+    <p class="menu-label">Categories</p>
+    <ul class="menu-list">
+    {% for category in site.categories %}
+        <li><a id="{{category | first}}" class="is-active" style="background-color:hsl(192, 43%, 45%)">{{category | first}}</a>
+            {% for posts in category %}
+                {% for post in posts %}
+                <ul>
+                    <li><a class="title is-6" href="{{ post.url | prepend: site.url }}">{{ post.title }}</a></li>
+                </ul>
+                {% endfor %}
+            {% endfor %}
+        </li>
+    {% endfor %}
+    </ul>
+</aside> -->
 
 
