@@ -1,0 +1,9 @@
+I",<ul class="menu-list">
+  <li><a href="#0-intro"><strong>0. Intro</strong></a></li>
+  <li><a href="#1-about-semantic-segmentation"><strong>1. About Semantic Segmentation</strong></a></li>
+  <li><a href="#2-cv2imwrite--vs-pascal-voc-annotation">2. cv2.imwrite( ) vs Pascal VOC Annotation</a></li>
+  <li><a href="#3-png-format-and-segmentation-label-image">3. PNG Format <em>and</em> Segmentation Label Image</a></li>
+  <li><a href="#4-how-create-label-image">4. <em>How create</em>… Label Image?</a></li>
+  <li><a href="#5-result">5. Result</a></li>
+</ul>
+:ET

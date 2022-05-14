@@ -1,0 +1,112 @@
+I"�<h2 id="-bolero2">🧐 bolero2</h2>
+
+<p>(Original README.md is <a href="https://github.com/bolero2/bolero2/blob/main/README.md">Here</a>)</p>
+<ul>
+  <li>I want to go <a href="/blog"><strong>Post Archive</strong></a> NOW!</li>
+</ul>
+
+<p><a href="https://bolero2.dev"><img src="http://img.shields.io/badge/Tech-Blog-20c997?style=flat-square&amp;logo=Velog&amp;link=https://bolero2.dev" alt="Tech Blog Badge" /></a> <a href="mailto:sheocjf1025@gmail.com"><img src="https://img.shields.io/badge/Gmail-d14836?style=flat-square&amp;logo=Gmail&amp;logoColor=white&amp;link=mailto:sheocjf1025@gmail.com" alt="Gmail Badge" /></a> <a href="https://hits.seeyoufarm.com"><img src="https://hits.seeyoufarm.com/api/count/incr/badge.svg?url=https%3A%2F%2Fgithub.com%2Fbolero2%2Fhit-counter&amp;count_bg=%2379C83D&amp;title_bg=%23555555&amp;icon=&amp;icon_color=%23E7E7E7&amp;title=hits&amp;edge_flat=false" alt="Hits" /></a></p>
+
+<p>🔭 <strong>I’m currently working on…</strong><br />
+<a href="https://neuralworks.io">NeuralWorksLab</a></p>
+
+<p>🌱 <strong>I’m currently learning…</strong></p>
+<ul>
+  <li><em><strong>Deep Learning</strong></em></li>
+  <li>Machine Learning</li>
+  <li>Computer Vision + Image Processing</li>
+  <li>Computer Graphics</li>
+  <li>(+ Android / iOS)</li>
+</ul>
+
+<h2 id="-statistics">📈 Statistics</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center"><strong>Github Stats</strong></th>
+      <th style="text-align: center"><strong>Top Langs</strong></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://github-readme-stats.vercel.app/api?username=bolero2&amp;count_private=true&amp;include_all_commits=true&amp;show_icons=true&amp;theme=cobalt" alt="bolero2's GitHub stats" /></td>
+      <td style="text-align: center"><a href="https://github.com/anuraghazra/github-readme-stats"><img src="https://github-readme-stats.vercel.app/api/top-langs/?username=bolero2&amp;layout=compact&amp;langs_count=10&amp;" alt="bolero2's Top Langs" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="-languages--frameworks">🛠 Languages &amp; Frameworks</h2>
+<p><img src="https://img.shields.io/badge/c-A8B9CC?style=for-the-badge&amp;logo=c&amp;logoColor=white" /> <img src="https://img.shields.io/badge/c++-00599C?style=for-the-badge&amp;logo=c++&amp;logoColor=white" /> <img src="https://img.shields.io/badge/python-3776AB?style=for-the-badge&amp;logo=python&amp;logoColor=white" /> <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&amp;logo=java&amp;logoColor=white" /> <img src="https://img.shields.io/badge/C Sharp-239120?style=for-the-badge&amp;logo=C Sharp&amp;logoColor=white" /> <img src="https://img.shields.io/badge/AssemblyScript-007AAC?style=for-the-badge&amp;logo=AssemblyScript&amp;logoColor=white" /></p>
+
+<p><img src="https://img.shields.io/badge/Android-3DDC84?style=for-the-badge&amp;logo=Android&amp;logoColor=white" /> <img src="https://img.shields.io/badge/Unity-FFFFFF?style=for-the-badge&amp;logoColor=white" /></p>
+
+<p><img src="https://img.shields.io/badge/pytorch-EE4C2C?style=for-the-badge&amp;logo=pytorch&amp;logoColor=white" /> <img src="https://img.shields.io/badge/tensorflow-FF6F00?style=for-the-badge&amp;logo=tensorflow&amp;logoColor=white" /> <img src="https://img.shields.io/badge/mxnet-3B86BF?style=for-the-badge&amp;logo=mxnet&amp;logoColor=white" /></p>
+
+<hr />
+
+<h2 id="-projects">🎬 Projects</h2>
+<ul>
+  <li><strong>시각 AI와 on-device AI 기술을 활용한 차세대 lens-free cell counter &amp; analyzer 개발 (with. SOL, 21.05 ~ 21.11)</strong>
+    <ul>
+      <li>Cell Detection Result Image : <a href="https://github.com/bolero2/bolero2/blob/main/images/cellcounter-1.jpg">Cell Detection</a></li>
+      <li>White Blood Cell Detection Result Image (Raabin WBC Dataset) : <a href="https://github.com/bolero2/bolero2/blob/main/images/wbc-1.jpg">WBC Detection</a></li>
+    </ul>
+  </li>
+  <li><strong>내시경 이미지 기반 위암/대장암 진단 AI (병변 Detection AI &amp; 병기 Classification AI) (with. CyberLogitec, 20.10 ~ 21.02)</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="-papers">📖 Papers</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">Date</th>
+      <th style="text-align: center">Name</th>
+      <th style="text-align: center">PDF</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">2018. 12</td>
+      <td style="text-align: center">이중흐름 3차원 합성곱 신경망 구조를 이용한 효율적인 손 제스처 인식 방법</td>
+      <td style="text-align: center"><a href="https://github.com/bolero2/bolero2/blob/main/papers/%5B2018.12%5D%20이중흐름%203차원%20합성곱%20신경망%20구조를%20이용한%20효율적인%20손%20제스처%20인식%20방법.pdf">Link</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2018. 12</td>
+      <td style="text-align: center">[KSC2018] 실시간 손 제스처 인식을 위한 덴스넷 기반 이중흐름 3차원 합성곱 신경망 구조</td>
+      <td style="text-align: center"><a href="https://github.com/bolero2/bolero2/blob/main/papers/%5BKSC2018%5D%20실시간%20손%20제스처%20인식을%20위한%20덴스넷%20기반%20이중흐름%203차원%20합성곱%20신경망%20구조.pdf">Link</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2019. 12</td>
+      <td style="text-align: center">Atrous Convolution과 Grad-CAM을 통한 손 끝 탐지</td>
+      <td style="text-align: center"><a href="https://github.com/bolero2/bolero2/blob/main/papers/%5B2019.12%5D%20Atrous%20Convolution과%20Grad-CAM을%20통한%20손%20끝%20탐지.pdf">Link</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2020. 06</td>
+      <td style="text-align: center">실시간 손끝 탐지를 위한 VGGNet 기반 객체 탐지 네트워크</td>
+      <td style="text-align: center"><a href="https://github.com/bolero2/bolero2/blob/main/papers/%5B2020.06%5D%20실시간%20손끝%20탐지를%20위한%20VGGNet%20기반%20객체%20탐지%20네트워크.pdf">Link</a></td>
+    </tr>
+    <tr>
+      <td style="text-align: center">2018. 12</td>
+      <td style="text-align: center"><strong>[KSC2018] Award Confirmation(수상 확인서)</strong></td>
+      <td style="text-align: center"><a href="https://github.com/bolero2/bolero2/blob/main/papers/Award_confirmation_KSC2018_20190215.pdf">Link</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- **bolero2/bolero2** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile. -->
+
+<!-- #Here are some ideas to get you started: -->
+
+<!-- - 👯 I’m looking to collaborate on ... -->
+<!-- - 🤔 I’m looking for help with ... -->
+<!-- - 💬 Ask me about ... -->
+<!-- - 📫 How to reach me: ... -->
+<!-- - 😄 Pronouns: ... -->
+<!-- - ⚡ Fun fact: ... -->
+:ET

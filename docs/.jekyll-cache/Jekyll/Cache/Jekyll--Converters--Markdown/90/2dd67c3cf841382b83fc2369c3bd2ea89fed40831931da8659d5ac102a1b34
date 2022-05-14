@@ -1,0 +1,14 @@
+I"7<ul class="menu-list">
+  <li><a href="#0-intro">0. Intro</a></li>
+  <li><a href="#1-before-development">1. Before Development</a></li>
+  <li><a href="#2-checking-header-information">2. Checking header information</a></li>
+  <li><a href="#3-development">3. Development</a>
+    <ul>
+      <li><a href="#3-1-pre-setting">3-1. pre-setting</a></li>
+      <li><a href="#3-3-networktask">3-3. NetworkTask</a></li>
+      <li><a href="#3-4-requesthttpsurlconnection">3-4. RequestHttpsURLConnection</a></li>
+    </ul>
+  </li>
+  <li><a href="#4-finish">4. Finish</a></li>
+</ul>
+:ET

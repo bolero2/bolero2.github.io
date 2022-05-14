@@ -1,0 +1,426 @@
+I"�<p><span class="tag  is-primary ">
+    DeepLearning
+</span>
+<span class="tag  is-primary ">
+    ObjectDetection
+</span></p>
+
+<h2 id="0-intro">0. Intro</h2>
+
+<p>NMS란? Non-maximum Suppression의 약자로써, <strong>비최대 억제 알고리즘</strong>으로 생각하면 된다.
+말 그대로, 최대가 아닌 박스들(=Bounding Box)을 삭제하는 알고리즘이다.</p>
+
+<p><strong>Object Detection</strong> Task에서 객체에 대한 최종 Bounding Box를 결정지을 때 사용한다.</p>
+
+<hr />
+
+<h2 id="1-principle">1. Principle</h2>
+
+<p>작동 방식은 다음과 같다.</p>
+
+<blockquote>
+  <ol>
+    <li>Prediction할 이미지를 Network에 Forward 시킨다.</li>
+    <li>출력 가능한 모든 박스를 구한다. (NMS 이전이므로, 수십~수백개의 박스 정보가 나온다.)</li>
+    <li>해당 박스 정보들을 <strong>Confidence Score</strong> 순으로 정렬한다.</li>
+    <li>박스 정보들의 <strong>Confidence Score</strong>와, 각 박스 간의 <strong>IoU</strong>를 바탕으로 하여 NMS를 적용한다.</li>
+    <li>NMS 적용 후에는, 알맞는 박스라고 여겨지는 값들만 출력된다.</li>
+  </ol>
+</blockquote>
+
+<p>핵심 키워드를 뽑자면, <strong>Confidence Score</strong>와 <strong>IoU</strong>라고 생각한다. (이 두 단어로 구현이 가능함.)</p>
+
+<h3 id="1-1-confidence-score">1-1. Confidence-Score?</h3>
+
+<p>여기서 <strong>Confidence Score(신뢰도, 신뢰 점수)</strong>라고 하는 것은
+<strong>네트워크가 정답을 도출해냈을 때, 그 정답에 대해 n%의 확신도를 갖는다는 의미</strong>이다.</p>
+
+<p>예를 들어, A 박스에 대한 Confidence Score가 0.75라면,
+네트워크가 생각했을 때 “아, 이 박스를 내가 도출하긴 했는데, 이 박스가 정답일 확률은 <strong>75%</strong> 정도야.” 라는 의미이다.</p>
+
+<h3 id="1-2-iou">1-2. IoU?</h3>
+
+<p>IoU는 <strong>Intersection Over Union</strong>의 약자이다.
+<img src="https://images.velog.io/images/bolero2/post/93cd3e8c-b77f-4de9-a3f4-d7683c4e6838/iou.png" alt="iou.png" /></p>
+
+<p>(Object Detection 을 다뤄본 개발자라면 많이 접해봤을 듯한 그림.)</p>
+
+<p>쉽게 말해서, 두 박스의 <strong>교집합</strong> / 두 박스의 <strong>합집합</strong> 이다.
+코드로 보자면 다음과 같다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">iou</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_is_box_intersect</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">abs</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">box2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">box1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">box2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">box1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">_get_area</span><span class="p">(</span><span class="n">box</span><span class="p">):</span>			<span class="c1"># area of box n.
+</span>        <span class="k">return</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_intersection_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">):</span>
+    <span class="c1"># intersection area
+</span>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">box1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">box1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get_union_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">,</span> <span class="n">inter_area</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">area_a</span> <span class="o">=</span> <span class="n">_get_area</span><span class="p">(</span><span class="n">box1</span><span class="p">)</span>
+        <span class="n">area_b</span> <span class="o">=</span> <span class="n">_get_area</span><span class="p">(</span><span class="n">box2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">inter_area</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">inter_area</span> <span class="o">=</span> <span class="n">_get_intersection_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">area_a</span> <span class="o">+</span> <span class="n">area_b</span> <span class="o">-</span> <span class="n">inter_area</span><span class="p">)</span>    
+
+    <span class="c1"># if boxes do not intersect
+</span>    <span class="k">if</span> <span class="n">_is_box_intersect</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+        
+    <span class="n">inter_area</span> <span class="o">=</span> <span class="n">_get_intersection_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">)</span>
+    <span class="n">union</span> <span class="o">=</span> <span class="n">_get_union_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">,</span> <span class="n">inter_area</span><span class="o">=</span><span class="n">inter_area</span><span class="p">)</span>
+    
+    <span class="c1"># intersection over union
+</span>    <span class="n">iou</span> <span class="o">=</span> <span class="n">inter_area</span> <span class="o">/</span> <span class="n">union</span>
+    <span class="k">if</span> <span class="n">iou</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">iou</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">iou</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s">"Measure is wrong! : IoU Value is [</span><span class="si">{</span><span class="n">iou</span><span class="si">}</span><span class="s">]."</span>
+    <span class="k">return</span> <span class="n">iou</span>
+</code></pre></div></div>
+
+<p>box1과 box2가 입력으로 왔을 때, 두 박스의 IoU를 계산해주는 코드이다.
+box의 좌표 체계는 <strong>[center_x, center_y, width, height]</strong> 이고, <strong>상대 좌표</strong> 이다.
+(YOLO의 라벨링 방법이라고 생각하면 된다.)</p>
+
+<hr />
+
+<h2 id="2-sample-code">2. Sample Code</h2>
+
+<p>코드로 살펴보자.
+임의로 박스 정보들을 생성해주고, Confidence Score 값도 넣어주었다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">colorset</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>		<span class="c1"># Red
+</span>        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>		<span class="c1"># Green
+</span>        <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>		<span class="c1"># Blue
+</span>        <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>		<span class="c1"># Cyan
+</span>        <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>		<span class="c1"># Magenta
+</span>        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>		<span class="c1"># Yellow
+</span><span class="p">]</span>
+
+<span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">600</span>
+
+<span class="n">boxes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># left sector boxes
+</span>    <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>        <span class="c1"># Red
+</span>    <span class="p">[</span><span class="mf">0.31</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">,</span> <span class="mf">0.13</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>    <span class="c1"># Green
+</span>    <span class="p">[</span><span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">,</span> <span class="mf">0.11</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>    <span class="c1"># Blue
+</span>
+    <span class="c1"># right sector boxes
+</span>    <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">],</span>     <span class="c1"># cyan
+</span>    <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.63</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">],</span>    <span class="c1"># magenta
+</span>    <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.62</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.77</span><span class="p">],</span>   <span class="c1"># yellow
+</span><span class="p">]</span>
+</code></pre></div></div>
+<p><strong>박스 정보는 [center_x, center_y, width, height, conf_score] 순으로 구성되어 있고,
+절대 좌표이다. (0~1 사이로 스케일링 된 값)</strong></p>
+
+<p>해당 박스들을 600 * 600의 빈 캔버스에 그려보면, 다음과 같은 박스를 볼 수 있다.</p>
+
+<p><img src="https://images.velog.io/images/bolero2/post/c166b00b-67ec-4c8c-a644-40a47109769e/before_nms.jpg" alt="before_nms.jpg" /></p>
+
+<p><strong>(박스 그려주는 코드)</strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">canvas</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">)).</span><span class="n">astype</span><span class="p">(</span><span class="s">'uint8'</span><span class="p">)</span>			<span class="c1"># empty canvas
+</span><span class="n">canvas_copy</span> <span class="o">=</span> <span class="n">canvas</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>						<span class="c1"># for after nms
+</span>
+<span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">box</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">boxes</span><span class="p">):</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                          <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                          <span class="n">colorset</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>임의로 만든 박스들이기 때문에, 우리는 어떤 것이 NMS 통과 후에 남아야 하는지 알 수 있다.
+바로 <strong>Red</strong>와 <strong>Cyan</strong> 색상의 박스만 남아야 한다.
+<em>(이유는, 좌/우측 섹터 기준으로 신뢰 점수가 가장 높기 때문이다.)</em></p>
+
+<p>그리고, <strong>NMS(boxes, iou_thres=0.4)</strong> 함수를 작성해주었다. (중간에 출력을 디버깅해볼 수 있는 print문이 있다.)</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">nms</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">iou_thres</span><span class="o">=</span><span class="mf">0.4</span><span class="p">):</span>
+    <span class="n">elems</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">boxes</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Before Arrange"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span>
+
+    <span class="c1"># sorting
+</span>    <span class="n">sorted_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">elems</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sorted_boxes</span> <span class="o">=</span> <span class="n">elems</span><span class="p">[</span><span class="n">sorted_index</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">After Arrange"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">)</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="p">[</span><span class="bp">True</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Before NMS Answer :"</span><span class="p">,</span> <span class="n">answer</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">answer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">iou_val</span> <span class="o">=</span> <span class="n">iou</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sorted_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> vs </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s"> = iou </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">iou_val</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">iou_val</span> <span class="o">&gt;=</span> <span class="n">iou_thres</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">iou_val</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">answer</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Index </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s"> is False."</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">After NMS Answer :"</span><span class="p">,</span> <span class="n">answer</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">sorted_boxes</span><span class="p">,</span> <span class="n">sorted_index</span>
+</code></pre></div></div>
+
+<p>순서는 <strong>1. 원리</strong>에서 본 것과 동일하다.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sorted_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">elems</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">sorted_boxes</span> <span class="o">=</span> <span class="n">elems</span><span class="p">[</span><span class="n">sorted_index</span><span class="p">]</span>
+</code></pre></div></div>
+<p>여기 부분에서 Confidence Score 순으로 box 정보들을 정렬하고,</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="k">if</span> <span class="n">answer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">continue</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">iou_val</span> <span class="o">=</span> <span class="n">iou</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sorted_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> vs </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s"> = iou </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">iou_val</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">iou_val</span> <span class="o">&gt;=</span> <span class="n">iou_thres</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">iou_val</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">answer</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Index </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s"> is False."</span><span class="p">)</span>
+</code></pre></div></div>
+<p>부분에서 실제로 IoU 값을 구하면서, 탈락 여부를 결정한다.</p>
+
+<p>IoU Threshold를 0.4로 설정하였기 때문에,
+박스 간의 IoU 값이 0.4 이상인 경우에는, <strong>Confidence Score가 낮은 박스가 탈락한다.</strong></p>
+
+<p>탈락 여부는 <code class="language-plaintext highlighter-rouge">answer = [True for x in range(sorted_boxes.shape[0])]</code> 로 미리 박스 개수만큼 True를 적어두고,
+탈락된 박스 자리에 <code class="language-plaintext highlighter-rouge">False</code>를 기록한다.</p>
+
+<hr />
+
+<p>디버깅 출력물은 다음과 같다.</p>
+
+<ul>
+  <li>** 정렬 이전의 box 정보들**
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Before</span> <span class="n">Arrange</span>
+<span class="p">[[</span><span class="mf">0.3</span>  <span class="mf">0.3</span>  <span class="mf">0.1</span>  <span class="mf">0.1</span>  <span class="mf">0.9</span> <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.31</span> <span class="mf">0.28</span> <span class="mf">0.14</span> <span class="mf">0.13</span> <span class="mf">0.5</span> <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.28</span> <span class="mf">0.28</span> <span class="mf">0.09</span> <span class="mf">0.11</span> <span class="mf">0.3</span> <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.75</span> <span class="mf">0.65</span> <span class="mf">0.2</span>  <span class="mf">0.2</span>  <span class="mf">0.99</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.7</span>  <span class="mf">0.63</span> <span class="mf">0.22</span> <span class="mf">0.18</span> <span class="mf">0.35</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.75</span> <span class="mf">0.62</span> <span class="mf">0.22</span> <span class="mf">0.22</span> <span class="mf">0.77</span><span class="p">]]</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>정렬 이후의 box 정보들</strong> (confidence score 순서로 잘 정렬되었다.)
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">After</span> <span class="n">Arrange</span>
+<span class="p">[[</span><span class="mf">0.75</span> <span class="mf">0.65</span> <span class="mf">0.2</span>  <span class="mf">0.2</span>  <span class="mf">0.99</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.3</span>  <span class="mf">0.3</span>  <span class="mf">0.1</span>  <span class="mf">0.1</span>  <span class="mf">0.9</span> <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.75</span> <span class="mf">0.62</span> <span class="mf">0.22</span> <span class="mf">0.22</span> <span class="mf">0.77</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.31</span> <span class="mf">0.28</span> <span class="mf">0.14</span> <span class="mf">0.13</span> <span class="mf">0.5</span> <span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.7</span>  <span class="mf">0.63</span> <span class="mf">0.22</span> <span class="mf">0.18</span> <span class="mf">0.35</span><span class="p">]</span>
+ <span class="p">[</span><span class="mf">0.28</span> <span class="mf">0.28</span> <span class="mf">0.09</span> <span class="mf">0.11</span> <span class="mf">0.3</span> <span class="p">]]</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>Answer라는 변수를 두고, 탈락 여부를 위한 리스트를 생성했다.</strong>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">Before</span> <span class="n">NMS</span> <span class="n">Answer</span> <span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+  <li><strong>NMS 동작 과정, 탈락하면 Answer[index]에 False를 기록한다.</strong>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">0</span> <span class="n">vs</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">iou</span> <span class="mf">1.0</span>
+<span class="mi">0</span> <span class="n">vs</span> <span class="mi">1</span> <span class="o">=</span> <span class="n">iou</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="n">vs</span> <span class="mi">2</span> <span class="o">=</span> <span class="n">iou</span> <span class="mf">0.754</span>
+<span class="n">Index</span> <span class="mi">2</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">.</span>
+<span class="mi">0</span> <span class="n">vs</span> <span class="mi">3</span> <span class="o">=</span> <span class="n">iou</span> <span class="mi">0</span>
+<span class="mi">0</span> <span class="n">vs</span> <span class="mi">4</span> <span class="o">=</span> <span class="n">iou</span> <span class="mf">0.519</span>
+<span class="n">Index</span> <span class="mi">4</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">.</span>
+<span class="mi">0</span> <span class="n">vs</span> <span class="mi">5</span> <span class="o">=</span> <span class="n">iou</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="n">vs</span> <span class="mi">0</span> <span class="o">=</span> <span class="n">iou</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="n">vs</span> <span class="mi">1</span> <span class="o">=</span> <span class="n">iou</span> <span class="mf">1.0</span>
+<span class="mi">1</span> <span class="n">vs</span> <span class="mi">2</span> <span class="o">=</span> <span class="n">iou</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="n">vs</span> <span class="mi">3</span> <span class="o">=</span> <span class="n">iou</span> <span class="mf">0.469</span>
+<span class="n">Index</span> <span class="mi">3</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">.</span>
+<span class="mi">1</span> <span class="n">vs</span> <span class="mi">4</span> <span class="o">=</span> <span class="n">iou</span> <span class="mi">0</span>
+<span class="mi">1</span> <span class="n">vs</span> <span class="mi">5</span> <span class="o">=</span> <span class="n">iou</span> <span class="mf">0.463</span>
+<span class="n">Index</span> <span class="mi">5</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">.</span>
+</code></pre></div>    </div>
+    <p>: 원래는 자기 자신과는 비교하면 안되는데, 그냥 비교하게 짰다. (심플하게)
+그 부분 처리를 위해 코드에 <code class="language-plaintext highlighter-rouge">int(iou_val) != 1</code>인 조건을 추가하였다.
+<strong>(iou_val이 1이라는 뜻은, 자기 자신과 비교한 경우이다.)</strong></p>
+  </li>
+</ul>
+
+<p>이제 보면, 2개의 경우가 있다.</p>
+<ul>
+  <li><strong>IoU가 0.4보다 작을 경우</strong></li>
+  <li><strong>IoU가 0.4보다 클 경우</strong></li>
+</ul>
+
+<p>1) 작을 경우는, <strong>살아남는 박스</strong>이다.
+2) 클 경우는, <strong>탈락하는 박스</strong>이다.
+(0.9 conf의 박스와 0.4 conf의 박스를 비교하여 iou_val == 0.5라고 한다면, 0.4 conf의 박스가 탈락한다.)</p>
+
+<ul>
+  <li><strong>NMS 이후에 살아남는 박스의 index, Answer 변수에 boolean 값으로 알 수 있다.</strong>
+    <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">After</span> <span class="n">NMS</span> <span class="n">Answer</span> <span class="p">:</span> <span class="p">[</span><span class="bp">True</span><span class="p">,</span> <span class="bp">True</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">,</span> <span class="bp">False</span><span class="p">]</span>
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>return 되는 값은, Answer 변수와 sorted_boxes, sorted_index를 반환해주었다.
+main 문에서 박스를 잘 볼 수 있게 하기 위함이다.</p>
+
+<hr />
+
+<h2 id="3-result">3. Result</h2>
+
+<p>main 문에서 다음과 같이 NMS 함수를 호출한다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">answer</span><span class="p">,</span> <span class="n">sorted_boxes</span><span class="p">,</span> <span class="n">sorted_index</span> <span class="o">=</span> <span class="n">nms</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">iou_thres</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+</code></pre></div></div>
+<p><strong>여기서 boxes는 before Arrange 박스들이다.</strong></p>
+
+<p>그리고, answer과 sorted_boxes, sorted_index 정보를 바탕으로,
+새로운 비어있는 canvas에 그려준다.</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">datum</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">,</span> <span class="n">sorted_index</span><span class="p">)):</span>
+    <span class="n">sbox</span><span class="p">,</span> <span class="n">sidx</span> <span class="o">=</span> <span class="n">datum</span>
+    <span class="k">if</span> <span class="n">answer</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">canvas_copy</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                                   <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                                   <span class="n">colorset</span><span class="p">[</span><span class="n">sidx</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+<p><strong>(Answer 변수가 <em>True</em> 인 box만 그려준다.)</strong></p>
+
+<p>그러면, 다음과 같이 Red와 Cyan 색상의 박스만 남은 것을 알 수 있다.
+<img src="https://images.velog.io/images/bolero2/post/509a537d-77a4-41c6-8c59-b5bb0fa6e2a0/after_nms.jpg" alt="after_nms.py" /></p>
+
+<hr />
+
+<h2 id="4-full-code">4. Full Code</h2>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+
+<span class="k">def</span> <span class="nf">iou</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_is_box_intersect</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">):</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">abs</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">box2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">box1</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+            <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">box2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">box1</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="p">):</span>
+            <span class="k">return</span> <span class="bp">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="k">def</span> <span class="nf">_get_area</span><span class="p">(</span><span class="n">box</span><span class="p">):</span>			<span class="c1"># area of box n.
+</span>        <span class="k">return</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">_get_intersection_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">):</span>
+    <span class="c1"># intersection area
+</span>        <span class="k">return</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">box1</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span>
+            <span class="nb">max</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">box1</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">box1</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">box2</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">box2</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="p">)</span>
+    <span class="k">def</span> <span class="nf">_get_union_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">,</span> <span class="n">inter_area</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">area_a</span> <span class="o">=</span> <span class="n">_get_area</span><span class="p">(</span><span class="n">box1</span><span class="p">)</span>
+        <span class="n">area_b</span> <span class="o">=</span> <span class="n">_get_area</span><span class="p">(</span><span class="n">box2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">inter_area</span> <span class="ow">is</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">inter_area</span> <span class="o">=</span> <span class="n">_get_intersection_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">area_a</span> <span class="o">+</span> <span class="n">area_b</span> <span class="o">-</span> <span class="n">inter_area</span><span class="p">)</span>    
+
+    <span class="c1"># if boxes do not intersect
+</span>    <span class="k">if</span> <span class="n">_is_box_intersect</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">)</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+        
+    <span class="n">inter_area</span> <span class="o">=</span> <span class="n">_get_intersection_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">)</span>
+    <span class="n">union</span> <span class="o">=</span> <span class="n">_get_union_area</span><span class="p">(</span><span class="n">box1</span><span class="p">,</span> <span class="n">box2</span><span class="p">,</span> <span class="n">inter_area</span><span class="o">=</span><span class="n">inter_area</span><span class="p">)</span>
+    
+    <span class="c1"># intersection over union
+</span>    <span class="n">iou</span> <span class="o">=</span> <span class="n">inter_area</span> <span class="o">/</span> <span class="n">union</span>
+    <span class="k">if</span> <span class="n">iou</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">iou</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">iou</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">,</span> <span class="sa">f</span><span class="s">"Measure is wrong! : IoU Value is [</span><span class="si">{</span><span class="n">iou</span><span class="si">}</span><span class="s">]."</span>
+    <span class="k">return</span> <span class="n">iou</span>
+
+
+<span class="k">def</span> <span class="nf">nms</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">iou_thres</span><span class="o">=</span><span class="mf">0.4</span><span class="p">):</span>
+    <span class="n">elems</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">boxes</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Before Arrange"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">elems</span><span class="p">)</span>
+
+    <span class="c1"># sorting
+</span>    <span class="n">sorted_index</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">elems</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sorted_boxes</span> <span class="o">=</span> <span class="n">elems</span><span class="p">[</span><span class="n">sorted_index</span><span class="p">]</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">After Arrange"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">)</span>
+
+    <span class="n">answer</span> <span class="o">=</span> <span class="p">[</span><span class="bp">True</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])]</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">Before NMS Answer :"</span><span class="p">,</span> <span class="n">answer</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="k">if</span> <span class="n">answer</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">False</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">iou_val</span> <span class="o">=</span> <span class="n">iou</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">sorted_boxes</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s"> vs </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s"> = iou </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">iou_val</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">iou_val</span> <span class="o">&gt;=</span> <span class="n">iou_thres</span> <span class="ow">and</span> <span class="nb">int</span><span class="p">(</span><span class="n">iou_val</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">answer</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="bp">False</span>
+                <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Index </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s"> is False."</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">After NMS Answer :"</span><span class="p">,</span> <span class="n">answer</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">answer</span><span class="p">,</span> <span class="n">sorted_boxes</span><span class="p">,</span> <span class="n">sorted_index</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="n">colorset</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">124</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">124</span><span class="p">),</span>
+    <span class="p">]</span>
+
+    <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">600</span>
+
+    <span class="n">boxes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1"># left boxes
+</span>        <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>                  <span class="c1"># Red
+</span>        <span class="p">[</span><span class="mf">0.31</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.14</span><span class="p">,</span> <span class="mf">0.13</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>              <span class="c1"># Green
+</span>        <span class="p">[</span><span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.09</span><span class="p">,</span> <span class="mf">0.11</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>              <span class="c1"># Blue
+</span>
+        <span class="c1"># right boxes
+</span>        <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.65</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">],</span>               <span class="c1"># cyan
+</span>        <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.63</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">],</span>              <span class="c1"># magenta
+</span>        <span class="p">[</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.62</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.77</span><span class="p">],</span>             <span class="c1"># yellow
+</span>    <span class="p">]</span>
+
+    <span class="n">canvas</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="mi">3</span><span class="p">)).</span><span class="n">astype</span><span class="p">(</span><span class="s">'uint8'</span><span class="p">)</span>
+    <span class="n">canvas_copy</span> <span class="o">=</span> <span class="n">canvas</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">box</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">boxes</span><span class="p">):</span>
+        <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">canvas</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                              <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height</span> <span class="o">*</span> <span class="n">box</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                              <span class="n">colorset</span><span class="p">[</span><span class="n">index</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">answer</span><span class="p">,</span> <span class="n">sorted_boxes</span><span class="p">,</span> <span class="n">sorted_index</span> <span class="o">=</span> <span class="n">nms</span><span class="p">(</span><span class="n">boxes</span><span class="p">,</span> <span class="n">iou_thres</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">datum</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">sorted_boxes</span><span class="p">,</span> <span class="n">sorted_index</span><span class="p">)):</span>
+        <span class="n">sbox</span><span class="p">,</span> <span class="n">sidx</span> <span class="o">=</span> <span class="n">datum</span>
+        <span class="k">if</span> <span class="n">answer</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="ow">is</span> <span class="bp">True</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="p">.</span><span class="n">rectangle</span><span class="p">(</span><span class="n">canvas_copy</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                                       <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">width</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="nb">int</span><span class="p">(</span><span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">height</span> <span class="o">*</span> <span class="n">sbox</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                                       <span class="n">colorset</span><span class="p">[</span><span class="n">sidx</span><span class="p">],</span> <span class="mi">2</span><span class="p">)</span>
+
+    <span class="c1"># print(canvas)
+</span>    <span class="n">cv2</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">"Before NMS"</span><span class="p">,</span> <span class="n">canvas</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="n">imshow</span><span class="p">(</span><span class="s">"After NMS"</span><span class="p">,</span> <span class="n">canvas_copy</span><span class="p">)</span>
+
+    <span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">"before_nms.jpg"</span><span class="p">,</span> <span class="n">canvas</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="n">imwrite</span><span class="p">(</span><span class="s">"after_nms.jpg"</span><span class="p">,</span> <span class="n">canvas_copy</span><span class="p">)</span>
+    <span class="n">cv2</span><span class="p">.</span><span class="n">waitKey</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+:ET
