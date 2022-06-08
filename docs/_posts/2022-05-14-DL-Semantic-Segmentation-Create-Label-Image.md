@@ -151,7 +151,7 @@ Label Image 제작에 앞서, 실제로
 
 위 이미지는 2개의 이미지를 Terminal 상에서 file command로 읽어온 결과입니다.
 
-**_2009_001625.png — RAW Image file_**
+**_2009_001625.png — RAW Image file_**  
 ![2009_001625.png](https://images.velog.io/images/bolero2/post/166417ed-1203-4b76-a7c9-563b1ef34d5d/bottle1.png)
 
 

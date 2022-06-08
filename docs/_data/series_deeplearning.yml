@@ -7,3 +7,4 @@ sections:
     items:
       - title: "[DL] NMS, Non-Maximum Suppression 파헤치기"
       - title: "[DL] Semantic Segmentation에서 Label Image 생성하기"
+      - title: "Apple Silicon(M1) 에 Anaconda & PyTorch 설치하기 + 성능 측정"

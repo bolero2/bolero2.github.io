@@ -1,0 +1,334 @@
+I"�i<p><span class="tag  is-primary ">
+    DeepLearning
+</span>
+<span class="tag  is-primary ">
+    SemanticSegmentation
+</span></p>
+
+<h1 id="semantic-segmentation에서-label-image-생성하기">Semantic Segmentation에서 Label Image 생성하기</h1>
+
+<p>semantic segmentation은 간단하게 보자면 <em>“<strong>Image</strong>” - “<strong>Image</strong>“</em> 관계의 학습입니다.</p>
+
+<p>X 입력에는 보통 jpg든 png든 읽을 수 있는 Image file이 놓이고,<br />
+Y 입력(정답)에는 보통 png 파일이 옵니다.</p>
+
+<p>이번 포스팅에서는 <em><strong>어떻게 하면 라벨에 해당되는 Image file(.png)를 만들 수 있는지?</strong></em> 살펴보겠습니다.</p>
+
+<hr />
+
+<h2 id="0-intro"><strong>0. Intro</strong></h2>
+
+<p>Semantic Segmentation Task를 학습하는데는 2가지 데이터가 필요합니다:
+<strong><em>(Input) X Data : 학습할 Image dataset
+(Input) Y Data : 학습할 Image에 대응되는 Color Map Image file</em></strong></p>
+
+<p>특히, Y Data 의 경우에 “<strong>JPG</strong>” 포맷이 아닌 “<strong>PNG</strong>” 포맷을 사용하게 됩니다.</p>
+
+<p>JPG 포맷은 손실 압축을 사용하기 때문에, 용량이 작다는 장점이 있지만
+_<strong>사용자의 눈에 잡히지 않는 특정 부분의 Color 값이 변경된다는 특징</strong>_이 있습니다.</p>
+
+<p>이번 글에서는 Semantic Segmentation의 Label Image를 생성하는 방법과 일반적인 Image Data 와의 차이점을 살펴보도록 하겠습니다.</p>
+
+<hr />
+
+<h2 id="1-about-semantic-segmentation"><strong>1. About Semantic Segmentation</strong></h2>
+<p>시작하기에 앞서, Semantic Segmentation Task가 정확히 어떤 Task인지 알아야 합니다.
+Semantic Segmentation Task의 경우, 
+<strong>전체 이미지에 대해 각각의 픽셀이 어느 Label(=Category)에 속하는지 분류하는 문제</strong>입니다.</p>
+
+<p>정교한 분류를 해내야 하기 때문에 <strong>Atrous Convolution</strong>과 같은 <strong>Receptive Field(수용 영역, 필터가 한 번에 볼 수 있는 영역)</strong>가 넓은 합성 곱 연산을 주로 사용합니다.</p>
+
+<dl>
+  <dt><strong>DeepLab V3+</strong> 코드 중에서, 가장 중요한 Loss Function 구현 부분을 보도록 하겠습니다.</dt>
+  <dt>(Github Repository</dt>
+  <dd>https://github.com/jfzhang95/pytorch-deeplab-xception)</dd>
+</dl>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">torch.nn</span> <span class="k">as</span> <span class="n">nn</span>
+
+<span class="k">class</span> <span class="nc">SegmentationLosses</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">batch_average</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="mi">255</span><span class="p">,</span> <span class="n">cuda</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">ignore_index</span> <span class="o">=</span> <span class="n">ignore_index</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">weight</span> <span class="o">=</span> <span class="n">weight</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">batch_average</span> <span class="o">=</span> <span class="n">batch_average</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">cuda</span> <span class="o">=</span> <span class="n">cuda</span>
+
+    <span class="k">def</span> <span class="nf">build_loss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s">'ce'</span><span class="p">):</span>
+        <span class="s">"""Choices: ['ce' or 'focal']"""</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">'ce'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">CrossEntropyLoss</span>
+        <span class="k">elif</span> <span class="n">mode</span> <span class="o">==</span> <span class="s">'focal'</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">FocalLoss</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">NotImplementedError</span>
+
+    <span class="k">def</span> <span class="nf">CrossEntropyLoss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">logit</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">ignore_index</span><span class="p">,</span>
+                                        <span class="n">reduction</span><span class="o">=</span><span class="s">'mean'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">cuda</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">.</span><span class="nb">long</span><span class="p">())</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">batch_average</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">/=</span> <span class="n">n</span>
+
+        <span class="k">return</span> <span class="n">loss</span>
+
+    <span class="k">def</span> <span class="nf">FocalLoss</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+        <span class="n">n</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">logit</span><span class="p">.</span><span class="n">size</span><span class="p">()</span>
+        <span class="n">criterion</span> <span class="o">=</span> <span class="n">nn</span><span class="p">.</span><span class="n">CrossEntropyLoss</span><span class="p">(</span><span class="n">weight</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">weight</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="bp">self</span><span class="p">.</span><span class="n">ignore_index</span><span class="p">,</span>
+                                        <span class="n">reduction</span><span class="o">=</span><span class="s">'mean'</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">cuda</span><span class="p">:</span>
+            <span class="n">criterion</span> <span class="o">=</span> <span class="n">criterion</span><span class="p">.</span><span class="n">cuda</span><span class="p">()</span>
+
+        <span class="n">logpt</span> <span class="o">=</span> <span class="o">-</span><span class="n">criterion</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="n">target</span><span class="p">.</span><span class="nb">long</span><span class="p">())</span>
+        <span class="n">pt</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">exp</span><span class="p">(</span><span class="n">logpt</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">alpha</span> <span class="ow">is</span> <span class="ow">not</span> <span class="bp">None</span><span class="p">:</span>
+            <span class="n">logpt</span> <span class="o">*=</span> <span class="n">alpha</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">pt</span><span class="p">)</span> <span class="o">**</span> <span class="n">gamma</span><span class="p">)</span> <span class="o">*</span> <span class="n">logpt</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="p">.</span><span class="n">batch_average</span><span class="p">:</span>
+            <span class="n">loss</span> <span class="o">/=</span> <span class="n">n</span>
+
+        <span class="k">return</span> <span class="n">loss</span>
+</code></pre></div></div>
+
+<p>위의 DeepLab V3+ Repository에 구현되어 있는 Loss Function 입니다.</p>
+
+<p>여기서 우리는 핵심적인 코어 함수가 <strong>nn.CrossEntropyLoss</strong> 임을 알 수 있습니다.
+Cross-Entropy Loss Function(이하 <strong>CE Loss</strong>)은 Semantic Segmentation Task(이하 <strong>분할 문제</strong>)이전에 분류 문제(Classification)에서 자주 쓰이는 손실 함수입니다.</p>
+
+<p>그럼 왜 분류 문제와 분할 문제는 둘다 CE Loss를 쓰는 것일까요?</p>
+
+<blockquote>
+  <p>1) 분류 문제(Classification) 에서는 이미지 1장 전체에 대한 Label을 분류합니다.
+(ex. 이 사진은 고양이 사진입니다!)</p>
+
+  <p>2) 분할 문제(Semantic Segmentation) 에서는 이미지 1장 내의 1개 픽셀에 대한 Label을 분류합니다.
+(ex. 이 픽셀은 고양이에 해당하는 픽셀입니다!)</p>
+</blockquote>
+
+<p>위에서 서술 하였듯이, 두 문제 모두 분류를 하긴 하지만 Classification 문제의 경우는 이미지 전체를 분류하고,
+<strong>Semantic Segmentation 문제의 경우는 1개 픽셀에 대해서만 분류합니다.</strong></p>
+
+<p>(분류 문제 신경망에서, Batch Size가 1이라고 가정한다면 단순히 
+True-Label 1개와 Predicted-Label 1개를 비교하는 것처럼, 
+True-Label’s 1–pixel과 Predicted-Label’s 1-pixel을 비교하는 것입니다.
+이는 이미지의 width * height 수만큼 반복됩니다.)</p>
+
+<p>1개 픽셀이라고 한다면?
+일반적인 Color Image는 <strong>3채널의 RGB</strong> 값이 들어오지만, 
+CE Loss를 사용하는 분할 문제 특성 상 <strong>1개 채널의 값</strong>이 들어오는데 이 값이 바로 <strong>Label Value</strong>가 되는 것입니다.</p>
+
+<p>최종적으로, Semantic Segmentation Task의 학습 방식은</p>
+
+<blockquote>
+  <ol>
+    <li>1개 픽셀 별로 Label 값을 다르게 준다.(Dataset 측면)</li>
+    <li>CE Loss를 통해 손실 값을 구한다.</li>
+    <li>Optimizer(SGD, Adam etc.)를 사용하여 해당 손실 값을 backward 방향으로 가중치를 갱신한다.</li>
+  </ol>
+</blockquote>
+
+<p>3단계로 볼 수 있습니다.</p>
+
+<hr />
+
+<h2 id="2-cv2imwrite--vs-pascal-voc-annotation">2. cv2.imwrite( ) vs Pascal VOC Annotation</h2>
+<p>Label Image 제작에 앞서, 실제로</p>
+
+<ul>
+  <li>일반적인 이미지 저장 함수 cv2.imwrite를 사용하여 저장한 Label Image</li>
+  <li>Pascal VOC의 Semantic Segmentation Task의 Annotation Label Image</li>
+</ul>
+
+<p>를 비교해 보았습니다.
+(Pascal VOC Dataset : host.robots.ox.ac.uk/pascal/VOC/voc2007)</p>
+
+<p><strong><em>Mac OS — file command in terminal</em></strong>
+<img src="https://images.velog.io/images/bolero2/post/bf3c4130-3bc6-4d4e-bdd8-c013ff4cbeb0/command.png" alt="file command in terminal" /></p>
+
+<p>위 이미지는 2개의 이미지를 Terminal 상에서 file command로 읽어온 결과입니다.</p>
+
+<p><strong><em>2009_001625.png — RAW Image file</em></strong><br />
+<img src="https://images.velog.io/images/bolero2/post/166417ed-1203-4b76-a7c9-563b1ef34d5d/bottle1.png" alt="2009_001625.png" /></p>
+
+<p><strong>2009_001625.png</strong> 파일은 Pascal VOC Dataset에서 가져온 파일이고,
+<strong>2009_001625_RGB.png</strong> 파일은 cv2.imwrite( ) 함수로 저장한 파일입니다.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">2009_001625.png(VOC IMAGE)</th>
+      <th style="text-align: center">2009_001625_RGB.png(cv2.imwrite IMAGE)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center"><img src="https://images.velog.io/images/bolero2/post/5a20712b-14a2-4374-a4b4-72e31dc1683d/bottle1.png" alt="2009_001625.png" /></td>
+      <td style="text-align: center"><img src="https://images.velog.io/images/bolero2/post/5b4e2800-04c5-4cbb-a3d7-de24198f7da1/bottle1_RGB.png" alt="2009_001625_RGB.png" /></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>명령어 결과를 보면, VOC Image는 8-bit colormap 파일이지만 cv2.imwrite로 저장한 Image는 8-bit/color RGB 파일입니다.
+사람이 보기엔, 육안상으로는 어떤 차이가 있을까요?</p>
+
+<p>어떤 이미지가 Pascal VOC인지 모를 정도로 너무 유사합니다…
+육안상으로도 전혀 차이점이 없습니다. 
+차이점이라고는 위에서 언급한 8-bit colormap이냐, 8-bit/color RGB 파일이냐 차이입니다.
+우리는 여기서 PNG 포맷의 특성과 Label Image와의 관계에 대해 알아볼 필요가 있습니다.</p>
+
+<hr />
+
+<h2 id="3-png-format-and-segmentation-label-image">3. PNG Format <em>and</em> Segmentation Label Image</h2>
+<p>PNG 포맷을 사용하는 이유는 JPG와 같은 손실압축 방식이 아닌,
+원본 그대로의 Color 값을 저장합니다.</p>
+
+<p>그리고 아주 중요한 특징이 하나 더 있는데, 바로
+<strong>Palette 정보를 넣을 수 있다는 점</strong>입니다.</p>
+
+<p>Palette 정보가 이미지에 들어가게 되면 Image Array는 더 이상 3채널이어야 할 필요가 없어집니다. 이를</p>
+
+<blockquote>
+  <p><strong>“Indexed Image”</strong></p>
+</blockquote>
+
+<p>라고 부릅니다.</p>
+
+<p>말 그대로 <strong>“색인화 된 이미지”</strong> 인 것이죠.</p>
+
+<p>Index 정보는 Palette가 되는 것이고, Image Array에는 단순히 1채널의 공간에 색인 정보(Index value)만 넣어주면 됩니다.
+추후에 Palette를 바꾸게 되면, Image의 색상 값도 바뀌게 되는 것입니다.</p>
+
+<p><strong>Semantic Segmentation은 Pixel에 대한 라벨 값을 학습할 때, 이 Index value를 학습하게 됩니다.</strong></p>
+
+<hr />
+
+<h2 id="4-how-create-label-image">4. <em>How create</em>… Label Image?</h2>
+<p>위에서 
+<em>1) 왜 PNG 포맷을 사용해야 하는지,</em>
+<em>2) Indexed Image란 무엇인지,</em>
+<em>3) 왜 cv2.imwrite( )와 같은 일반적인 이미지 저장 함수로 저장하면 안되는지</em>
+알아보았습니다.</p>
+
+<p>이제는 Polygon 타입의 Label Image (for Segmentation)를 제작해보겠습니다.
+준비물은 다음과 같습니다:</p>
+
+<blockquote>
+  <ol>
+    <li>Color Map과 Palette 정보</li>
+    <li>저장할 Image 정보(file 형식, numpy.ndarray 형식 모두 상관 없습니다.)</li>
+  </ol>
+</blockquote>
+
+<hr />
+
+<p><strong><em>Color Map을 생성하는 코드입니다.</em></strong></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+ 
+<span class="k">def</span> <span class="nf">make_colormap</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="mi">256</span><span class="p">):</span>
+   <span class="k">def</span> <span class="nf">bit_get</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+       <span class="k">return</span> <span class="p">(</span><span class="n">val</span> <span class="o">&gt;&gt;</span> <span class="n">idx</span><span class="p">)</span> <span class="o">&amp;</span> <span class="mi">1</span>
+ 
+   <span class="n">colormap</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">num</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+   <span class="n">ind</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">arange</span><span class="p">(</span><span class="n">num</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+ 
+   <span class="k">for</span> <span class="n">shift</span> <span class="ow">in</span> <span class="nb">reversed</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">))):</span>
+       <span class="k">for</span> <span class="n">channel</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+           <span class="n">colormap</span><span class="p">[:,</span> <span class="n">channel</span><span class="p">]</span> <span class="o">|=</span> <span class="n">bit_get</span><span class="p">(</span><span class="n">ind</span><span class="p">,</span> <span class="n">channel</span><span class="p">)</span> <span class="o">&lt;&lt;</span> <span class="n">shift</span>
+       <span class="n">ind</span> <span class="o">&gt;&gt;=</span> <span class="mi">3</span>
+ 
+   <span class="k">return</span> <span class="n">colormap</span>
+ 
+<span class="n">cmap</span> <span class="o">=</span> <span class="n">make_colormap</span><span class="p">(</span><span class="mi">256</span><span class="p">).</span><span class="n">tolist</span><span class="p">()</span>
+<span class="n">palette</span> <span class="o">=</span> <span class="p">[</span><span class="n">value</span> <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">cmap</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">color</span><span class="p">]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">cmap</span><span class="p">,</span> <span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span> <span class="n">palette</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 Color Map을 생성하는 코드입니다.</p>
+
+<p>Pascal VOC에서 해당 방식으로 Color Map을 생성하여 [20개 라벨 + background] 까지 하여 총 21개의 색상 값을 사용합니다.</p>
+
+<p>우리가 저 코드에서 사용할 변수는 <strong>cmap</strong> 과 <strong>palette</strong> 가 있습니다.
+<strong>cmap</strong> 은 Image에 색인 정보를 넣어줄 때 사용할 것이고, 
+<strong>palette</strong> 는 PNG 포맷으로 저장할 때 넣어줄 팔레트 정보입니다.</p>
+
+<p>해당 코드 동작 결과는 다음과 같습니다:</p>
+<blockquote>
+  <p>[0, 0, 0, 128, 0, 0, 0, 128, 0, 128, 128, 0, 0, 0, 128, 128, 0, 128, 0, 128, 128, … ]</p>
+</blockquote>
+
+<p>보시다시피 앞에서 3개씩 끊어서 볼 수 있습니다.</p>
+
+<p>예를 들어, 0번 라벨(background)의 경우 RGB 값은 [0, 0, 0]이 될 것이고,
+1번 라벨(aeroplane)의 경우 RGB 값은 [128, 0, 0]이 될 것이며, 
+2번 라벨(bicycle)의 경우 RGB 값은 [0, 128, 0]이 될 것입니다.</p>
+
+<p>(이는 사용자가 직접 값을 넣어줘도 상관없습니다. 본문에서는 Pascal VOC Dataset을 사용하여 실험하였기 때문에, Pascal VOC Dataset의 Category 정보와 색상 정보를 사용하였습니다.)</p>
+
+<hr />
+
+<p>Color Map과 Palette 정보를 생성하였다면, 이미지에 색인 정보와 Palette를 함께 넣어주기만 하면 됩니다.</p>
+
+<p><em><strong>Label Image 생성 코드</strong></em></p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">cv2</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
+
+
+<span class="c1"># Image data to save = image_data(numpy.ndarray)
+</span><span class="n">label_img</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">image_data</span><span class="p">)</span>
+ 
+<span class="c1"># if image array has BGR order
+</span><span class="n">label_img</span> <span class="o">=</span> <span class="n">cv2</span><span class="p">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">label_img</span><span class="p">,</span> <span class="n">cv2</span><span class="p">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)</span>
+<span class="c1"># Create an unsigned-int (8bit) empty numpy.ndarray of the same size (shape)
+</span><span class="n">img_png</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">label_img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label_img</span><span class="p">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">np</span><span class="p">.</span><span class="n">uint8</span><span class="p">)</span>
+ 
+<span class="c1"># Assign index to empty ndarray. Finding pixel location using np.where.
+# If you don't use np.where, you have to run a double for-loop for each row/column.
+</span><span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">val_col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cmap</span><span class="p">):</span>
+    <span class="n">img_png</span><span class="p">[</span><span class="n">np</span><span class="p">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="nb">all</span><span class="p">(</span><span class="n">label_img</span> <span class="o">==</span> <span class="n">val_col</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">))]</span> <span class="o">=</span> <span class="n">index</span>
+ 
+<span class="c1"># Convert ndarray with index into Image object (P mode) of PIL package
+</span><span class="n">img_png</span> <span class="o">=</span> <span class="n">Image</span><span class="p">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">img_png</span><span class="p">).</span><span class="n">convert</span><span class="p">(</span><span class="s">'P'</span><span class="p">)</span>
+<span class="c1"># Palette information injection
+</span><span class="n">img_png</span><span class="p">.</span><span class="n">putpalette</span><span class="p">(</span><span class="n">palette</span><span class="p">)</span>
+<span class="c1"># save image
+</span><span class="n">img_png</span><span class="p">.</span><span class="n">save</span><span class="p">(</span><span class="s">'output.png'</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>위 코드는 실제로 Label Image를 생성하는 코드입니다.</p>
+
+<p>순서는 다음과 같습니다:</p>
+<blockquote>
+  <ol>
+    <li>image data를 numpy.ndarray 타입으로 호출합니다.</li>
+    <li>BGR 순서라면 RGB 순서로 바꿔줍니다.</li>
+    <li>동일한 크기의 unsigned-int (8bit) ndarray를 생성합니다.</li>
+    <li><strong>각 Color Map의 색상 정보를 찾아서, 색인화 과정을 합니다.</strong>
+(이미지의 픽셀을 돌며 비교하는 것이 아닌, Color Map의 1-Row에 해당하는 값을 한번에 바꿔주는 형식으로 합니다.)</li>
+    <li>색인화 된 이미지 행렬을 ‘P’ mode로 저장합니다.(<strong>P</strong> mode는 <strong>Palette</strong> 모드입니다.)</li>
+    <li>위에서 생성한 Palette를 넣어줍니다.</li>
+    <li>png format으로 이미지를 저장합니다.</li>
+  </ol>
+</blockquote>
+
+<p>이렇게 하면 Palette 정보가 있는 색인화 된 이미지 파일을 생성할 수 있습니다.</p>
+
+<p>이렇게 생성된 이미지 파일은 바로 Semantic Segmentation의 학습에 사용 가능하며, Predict 함수에서 출력된 결과를 저장할 때도 이러한 방식으로 저장하여 성능 측정이 가능합니다.</p>
+
+<hr />
+
+<h2 id="5-result">5. Result</h2>
+<ol>
+  <li>Semantic Segmentation의 Label Image 생성 시, 일반적인 이미지 저장 방식으로 저장하면 안됩니다.</li>
+  <li>Color Map과 Palette 정보가 포함된, Indexed Image를 제작해야 합니다.</li>
+  <li>그 이유는 Segmentation 학습이 CE Loss를 사용하는데, 여기서 1-Pixel에 대해 1개의 값(=label value)을 비교하기 때문입니다.</li>
+  <li>사용자가 Augmentation 혹은 Annotation 시에, 특정 Color Map을 생성 후에 Pixel의 Label Value에 색인화 시켜주는 작업이 필요합니다. 
+(상단 소스코드 참조)</li>
+</ol>
+:ET

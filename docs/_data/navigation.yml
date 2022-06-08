@@ -17,6 +17,8 @@
 #       link: /showcase/
 - name: Blog
   link: /blog/
+- name: Category
+  link: /category/
 - name: My works
   link: /#
   dropdown:

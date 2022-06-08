@@ -54,7 +54,9 @@ sass:
   style: compressed
   source_dir: _sass
 
-google_analytics: 3563142385    # UA-228665215-2
+google_analytics: UA-228665215-2    # UA-228665215-2
+# UA-228665215-2
+# 3563142385
 
 defaults:
   -
