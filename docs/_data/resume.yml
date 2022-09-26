@@ -3,40 +3,49 @@
 # See also: <https://jsonresume.org/>.
 basics:
   name: "Dae-Cheol Noh"
-  label: "Programmer"
-  picture: assets/img/logo.png      #"https://via.placeholder.com/240x240"
+  label: "AI Researcher & Engineer"
+  picture: assets/img/me1.jpg        #"https://via.placeholder.com/240x240"
   email: "sheocjf1025@gmail.com"
   phone: ""
   website: ""
   summary: >
-    Richard hails from Tulsa.
-    He has earned degrees from the University of Oklahoma and Stanford. (Go Sooners and Cardinals!)
-    Before starting Pied Piper, he worked for Hooli as a part time software developer.
-    While his work focuses on applied information theory,
-    mostly optimizing lossless compression schema of both the length-limited and adaptive variants,
-    his non-work interests range widely,
-    everything from quantum computing to chaos theory.
-    He could tell you about it, but THAT would NOT be a “length-limited” conversation!
-    Open `_data/resume.yml` to edit this text.
+    Hi! I'm Dae-Cheol, Noh. and I am **AI Engineer**.   
+    
+    I like image processing and computer vision, and I have studied for a long time,    
+
+    so Vision AI is my favorite among deep learning fields.  
+
+    In addition to Vision AI, I’m also interested in Computer Graphics and GPU-Accelerating technologies.
+    (Open ACC, Open MP etc.)  
+
+    What I am currently interested in...   
+      * Machine Learning + Deep Learning
+      * Computer Vision + Image Processing
+      * Mathematics (Calculus + Linear Algebra)
+      * Computer Graphics
+      * GPU Accelerating Tech.
+      * (Android + iOS development)
+
+# Open `_data/resume.yml` to edit this text.
   location:
-    address: "2712 Broadway St"
-    postalCode: "CA 94115"
-    city: "San Francisco"
-    countryCode: "US"
-    region: "California"
+    address: "Dongjak-gu, Sadang-dong"
+    postalCode: ""
+    city: "Seoul"
+    countryCode: "KR"
+    region: ""
   profiles:
-    - network: "Twitter"
-      username: "RHendricksCEO"
-      url: ""
+    - network: "Github"
+      username: "bolero2"
+      url: "https://github.com/bolero2"
     - network: "LinkedIn"
-      username: "Richard Hendricks"
-      url: ""
+      username: "Dae-Cheol Noh"
+      url: "https://www.linkedin.com/in/dae-cheol-noh-050492170/"
 work:
-  - company: "Pied Piper"
-    position: "CEO/President"
+  - company: "CyberLogitec"
+    position: "(Intern) AI Engineer"
     website: "https://piedpiper.com"
-    startDate: "2013-12-01"
-    endDate: ""
+    startDate: "2020-10-01"
+    endDate: "2021-02-28"
     summary: >
       Pied Piper is a multi-platform technology based on a proprietary universal compression algorithm that has
       consistently fielded high Weisman Scores™ that are not merely competitive,
@@ -45,59 +54,101 @@ work:
       - "Built an algorithm for artist to detect if their music was violating copy right infringement laws"
       - "Successfully won Techcrunch Disrupt"
       - "Optimized an algorithm that holds the current world record for Weisman Scores"
-volunteer:
-  - organization: "CoderDojo"
-    position: "Teacher"
-    website: "https://coderdojo.com/"
-    startDate: "2012-01-01"
-    endDate: "2013-01-01"
-    summary: "Global movement of free coding clubs for young people."
+  - company: "NeuralWorks Lab"
+    position: "AI Researcher & Engineer"
+    website: "https://neuralworks.io"
+    startDate: "2021-03-01"
+    endDate: "2022-08-31"
+    summary: >
+      aa
     highlights:
-      - "Awarded 'Teacher of the Month'"
+      - a
+      - b
+  - company: "GOPIZZA" 
+    position: "AI Researcher & Engineer"
+    website: "https://gopizza.kr"
+    startDate: "2022-09-05"
+    endDate: ""
+    summary: >
+      a
+    hightlights:
+      - a
+      - b
+# volunteer:
+#   - organization: "CoderDojo"
+#     position: "Teacher"
+#     website: "https://coderdojo.com/"
+#     startDate: "2012-01-01"
+#     endDate: "2013-01-01"
+#     summary: "Global movement of free coding clubs for young people."
+#     highlights:
+#       - "Awarded 'Teacher of the Month'"
 education:
-  - institution: "University of Oklahoma"
-    area: "Information Technology"
+  - institution: "SeoKyeong University"
+    area: "Computer Engineering"
     studyType: "Bachelor"
-    startDate: "2011-06-01"
-    endDate: "2014-01-01"
-    gpa: "4.0"
-    courses:
-      - "DB1101 - Basic SQL"
-      - "CS2011 - Java Introduction"
+    startDate: "2014-03-02"
+    endDate: "2021-02-28"
+    gpa: "3.52"
+    # courses:
+    #   - "DB1101 - Basic SQL"
+    #   - "CS2011 - Java Introduction"
 awards:
-  - title: "Digital Compression Pioneer Award"
-    date: "2014-11-01"
-    awarder: "Techcrunch"
-    summary: "There is no spoon."
+  - title: "[KSC2018] 학부생/주니어논문경진대회 학부생부문 장려상"
+    date: "2019-02-15"
+    awarder: "한국정보과학회 회장"
+    summary: ""
 publications:
-  - name: "Video compression for 3d media"
-    publisher: "Hooli"
-    releaseDate: "2014-10-01"
-    website: "https://en.wikipedia.org/wiki/Silicon_Valley_(TV_series)"
-    summary: "Innovative middle-out compression algorithm that changes the way we store data."
+  - name: "이중흐름 3차원 합성곱 신경망 구조를 이용한 효율적인 손 제스처 인식 방법"
+    publisher: "한국차세대컴퓨팅학회"
+    releaseDate: "2018-12-13"
+    website: "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002429571"
+    summary: "Recently, there has been active studies on hand gesture recognition to increase immersion and provide user-friendly interaction in a virtual reality environment. However, most studies require specialized sensors or equipment, or show low recognition rates. This paper proposes a hand gesture recognition method using Deep Learning technology without separate sensors or equipment other than camera to recognize static and dynamic hand gestures. First, a series of hand gesture input images are converted into high-frequency images, then each of the hand gestures RGB images and their high-frequency images is learned through the DenseNet three-dimensional Convolutional Neural Network. Experimental results on 6 static hand gestures and 9 dynamic hand gestures showed an average of 92.6% recognition rate and increased 4.6% compared to previous DenseNet. The 3D defense game was implemented to verify the results of our study, and an average speed of 30 ms of gesture recognition was found to be available as a real-time user interface for virtual reality applications."
+  - name: "실시간 손 제스처 인식을 위한 덴스넷 기반 이중흐름 3차원 합성곱 신경망 구조"
+    publisher: "한국정보과학회"
+    website: "https://www.dbpia.co.kr/Journal/articleDetail?nodeId=NODE07614122"
+    summary: "가상현실이 의료, 교육, 군사 훈련 등 다방면에서 사용됨에 따라 가상환경에서 자유로운 상호작용을 제공하기 위한 손 제스처 인식에 대한 연구가 활발히 진행되고 있다. 그러나 대부분은 별도의 센서를 요구하거나, 낮은 적중률을 보이고 있다. 본 논문은 정적 손 제스처 인식과 동적 손 제스처 인식을 위해 일반적인 USB 카메라 이외의 별도의 센서나 장 비 없이 딥러닝 기술을 사용한 손 제스처 인식 방법을 제안한다. 입력된 손 제스처를 고주파 영상들로 변환한 다음, 각 손 제스처 영상과 고주파 영상에 대해 각각 덴스넷 기반의 이중 흐름 합성곱 신경망을 수행한 다음 융합된 정보로 보다 정확한 손 제스처를 인식한다. 그리고 실시간 인터페이스 검증을 위해 가상현실 기반 3D 디펜스 게임을 개발하 여 실험한 결과, 6개의 정적 손 제스처와 9개의 동적 손 제스처 인터페이스에 대해 기존의 단일 흐름의 덴스넷에 비 해 4.58%의 성능이 향상된 평균 92.6%의 인식률을 보였다. 본 연구의 결과는 마우스나 키보드 없이 다양한 가상현실 응용 분야에서 입력 인터페이스로 활용될 수 있다."
+  - name: "Atrous Convolution과 Grad-CAM을 통한 손 끝 탐지"
+    publisher: "한국컴퓨터그래픽스학회"
+    website: "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002529690"
+    summary: "With the development of deep learning technology, research is being actively carried out on user-friendly interfaces that are suitable for use in virtual reality or augmented reality applications. To support the interface using the user's hands, this paper proposes a deep learning-based fingertip detection method to enable the tracking of fingertip coordinates to select virtual objects, or to write or draw in the air. After cutting the approximate part of the corresponding fingertip object from the input image with the Grad-CAM, and perform the convolution neural network with Atrous Convolution for the cut image to detect fingertip location. This method is simpler and easier to implement than existing object detection algorithms without requiring a pre-processing for annotating objects. To verify this method we implemented an air writing application and showed that the recognition rate of 81% and the speed of 76 ms were able to write smoothly without delay in the air, making it possible to utilize the application in real time."
+  - name: "실시간 손끝 탐지를 위한 VGGNet 기반 객체 탐지 네트워크"
+    publisher: "한국차세대컴퓨팅학회"
+    website: "https://www.kci.go.kr/kciportal/ci/sereArticleSearch/ciSereArtiView.kci?sereArticleSearchBean.artiId=ART002608280"
+    summary: "Recently, research is being actively carried out to provide a user-friendly interface in virtual reality and augmented reality applications by applying rapidly developed deep learning technology. This paper proposes a deep learning-based fingertip detection method that detects real-time fingertips in order to provide the interface using the user’s hand. This method introduces the DenseNet Connectivity to the VGG-19 network without the required annotation preprocessing process in the existing object detection network, reducing the total number of parameters and the time required, and detecting the fingertips using the Atrous Convolution and the Grad-CAM. As a result of experimenting with this method in various environments, it was found that real-time processing of 34.4 ms is possible with an average recognition rate of 5% higher than the existing method (SSD network). As a result of this study, the application for real-time air-writing using the user's fingertips was developed, showing the usability of the user interface."
 skills:
-  - name: "Web Development"
+  - name: "ML/DL"
     level: "Master"
     keywords:
-      - "HTML"
-      - "CSS"
-      - "Javascript"
-  - name: "Compression"
+      - "Tensorflow"
+      - "Keras"
+      - "PyTorch"
+      - "MXNet"
+      - "Scikit-Learn"
+  - name: "Programming Language"
     level: "Master"
     keywords:
-      - "Mpeg"
-      - "MP4"
-      - "GIF"
+      - "C"
+      - "C++"
+      - "C#"
+      - "Java"
+      - "Python"
+      - "Assembly Script"
+  - name: "Tools"
+    level: "Master"
+    keywords:
+      - "Unity"
+      - "Android Studio"
 languages:
   - language: "English"
-    fluency: "Native speaker"
-interests:
-  - name: "Wildlife"
-    keywords:
-      - "Ferrets"
-      - "Unicorns"
-references:
-  - name: "Erlich Bachman"
-    reference: >
-      It is my pleasure to recommend Richard, his performance working as a consultant for Main St.
-      Company proved that he will be a valuable addition to any company.
+    fluency: "Able to Communicate"
+# interests:
+#   - name: "Wildlife"
+#     keywords:
+#       - "Ferrets"
+#       - "Unicorns"
+# references:
+#   - name: "Erlich Bachman"
+#     reference: >
+#       It is my pleasure to recommend Richard, his performance working as a consultant for Main St.
+#       Company proved that he will be a valuable addition to any company.
