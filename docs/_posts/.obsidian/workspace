@@ -1,0 +1,141 @@
+{
+  "main": {
+    "id": "03c6a260a3bd97fc",
+    "type": "split",
+    "children": [
+      {
+        "id": "6dcf38e7cfcd3421",
+        "type": "leaf",
+        "state": {
+          "type": "markdown",
+          "state": {
+            "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
+            "mode": "source",
+            "source": false
+          }
+        }
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "8faa06f59a4e958e",
+    "type": "split",
+    "children": [
+      {
+        "id": "8844a4f22ca2299c",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9b1a53653054520a",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {}
+            }
+          },
+          {
+            "id": "092853b4dc33f194",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "8ab2f7ec27a34ff7",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "18bb1e9cd40b4ea0",
+    "type": "split",
+    "children": [
+      {
+        "id": "05fbd30ab2338545",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "8e9fa27aad059626",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "4e676ad86b3f7e69",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "3ad664925dfd8595",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "0b45b21cc25911d2",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "active": "6dcf38e7cfcd3421",
+  "lastOpenFiles": [
+    "2022-09-27-DL-Principle-of-NMS.md",
+    "2022-09-27-DL-Semantic-Segmentation-Create-Label-Image.md",
+    "2022-09-27-install-anaconda-pytorch-on-m1.md",
+    "2022-09-27-Paper-Better-plain-ViT-baselines-for-ImageNet-1k.md",
+    "2022-09-27-Paper-DETR-End-to-End-Object-Detection-with-Transformer.md",
+    "2022-09-27-Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching.md",
+    "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md"
+  ]
+}
