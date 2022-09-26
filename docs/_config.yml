@@ -17,7 +17,7 @@
 
 # Language of your content in 2-letter code, e.g.: en, de.
 # You may also provide a location, e.g.: en-us, de_AT.
-lang:                  en
+lang:                  en, kr
 
 # The title of your blog. Used in the sidebar and the browser tab.
 title:                 bolero2's Archieve
@@ -25,14 +25,15 @@ title:                 bolero2's Archieve
 # A short description (~150 chars) of the page used for the meta description tag.
 # Can use markdown, but no more than one paragraph (enforced by `>`)
 description:           >
-  Hydejack is a boutique Jekyll theme for hackers, nerds, and academics,
-  with a focus on personal sites that are meant to impress.
+  # Hydejack is a boutique Jekyll theme for hackers, nerds, and academics,
+  # with a focus on personal sites that are meant to impress.
+  Computer Vision is the best in my life totally.
 
 # A shorter description for the sidebar.
 tagline:               ML/DL Researcher & Engineer, Especially Computer Vision
 
 # A list of keywords for your blog
-keywords:              []
+keywords:              ['Computer Vision', 'Machine Learning', 'Deep Learning']
 
 # A (square) logo for your site.
 # If provided, it will be shown at the top of the sidebar.
@@ -42,8 +43,8 @@ logo:                  /assets/img/logo.png
 # This should be the same author as first entry in `_data/authors.yml`.
 author:
   # Used by `jekyll-feed`:
-  name:                <firstname> <lastname>
-  email:               <mail@domain.tld>
+  name:                Dae-Cheol Noh
+  email:               sheocjf1025@gmail.com
   # # Used by `jekyll-seo-tag`:
   # twitter:             <username>
 
