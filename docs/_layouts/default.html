@@ -1,59 +1,56 @@
-<!DOCTYPE html>
-{% if page.menubar or page.menubar_toc %}
-{% assign has_left_sidebar = true %}
-{% endif %}
+---
+# Copyright (c) 2018 Florian Klampfer <https://qwtel.com/>
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-{% if page.show_sidebar and has_left_sidebar  %}
-{% assign content_width = 'is-4' %}
-{% elsif page.show_sidebar or has_left_sidebar %}
-{% assign content_width = 'is-8' %}
-{% else %}
-{% assign content_width = 'is-12' %}
-{% endif %}
+layout: base
+---
 
-<html
- dir="{{ site.direction | default: 'ltr' }}"
- lang="{{ site.lang | default: 'en' }}"
- {% if site.fixed_navbar %}class="has-navbar-fixed-{{ site.fixed_navbar }}"{% endif %}>
-  {% include head.html %}
-  <body>
-    {% include header.html %}
-    {% unless page.hide_hero %}
-        {% include hero.html %}
-    {% endunless %}
-    {% include callouts.html %}
-    <section class="section">
-        <div class="container">
-            <div class="columns is-multiline">
-                {% if page.menubar_toc %}
-                <div class="column is-4-desktop is-4-tablet">
-                    {% assign contentsTitle = page.toc_title | default: 'Contents' %}
-                    {% include toc.html html=content class='menu-list' h_min=2 h_max=3 contents_title=contentsTitle %}
-                </div>
-                {% elsif page.menubar %}
-                <div class="column is-4-desktop is-4-tablet">
-                    {% include menubar.html %}
-                </div>
-                {% endif %}
-                <div class="column {{ content_width }}">
-                    {% include tabs.html %}
-                    {% include showcase.html %}
-                    {% include sponsors.html %}
-                    {% include gallery.html %}
-                    {{ content }}
-                </div>
-                {% if site.posts and page.show_sidebar %}
-                <div class="column is-4-desktop is-4-tablet">
-                    {% include latest-posts.html %}
-                </div>
-                {% endif %}
-            </div>
-        </div>
-    </section>
-    {% unless page.hide_footer %}
-        {% include footer.html %}
-    {% endunless %}
-    <script src="{{ site.baseurl }}/assets/js/app.js" type="text/javascript"></script>
-    {%- include footer-scripts.html -%}
-  </body>
-</html>
+{% assign strings = site.data.strings %}
+
+<article class="page" role="article">
+  <header>
+    <h1 class="page-title">{{ page.title | default:strings.home | default:"Home" }}</h1>
+    {% include components/message.html text=page.description hide=page.hide_description %}
+  </header>
+
+  {{ content }}
+
+  <hr class="dingbat related"/>
+
+  {% if site.posts.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.posts | default:"Posts" }}</h2>
+    <ul class="related-posts">
+      {% for post in site.posts limit:5 %}
+        {% include_cached components/post-list-item.html post=post %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+
+  {% assign pages = site.html_pages | where:"layout","page" | where_exp:"page","page.sitemap != false" %}
+  {% if pages.size > 0 %}
+    <h2 class="hr-bottom">{{ strings.pages | default:"Pages" }}</h2>
+    <ul class="related-posts">
+      {% for page in pages limit:5 %}
+        {% if page.layout == 'page' %}
+          <li class="h4">
+            <a href="{{ page.url | relative_url }}" class="flip-title">
+              <span>{{ page.title }}</span>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% endif %}
+</article>
