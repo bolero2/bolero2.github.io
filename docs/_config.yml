@@ -3,7 +3,7 @@
 
 # Uncomment and set the URL of your site (with protocol, e.g. `https://`)
 # NOTE: You don't need to provide this property when hosting on GitHub Pages or Netlify.
-# url:                   https://username.github.io
+url:                   https://bolero2.github.io
 
 # Uncomment and set the "base URL" of your site.
 # When your site is in a subdirectory, set to `/<name of directory>`,
@@ -27,7 +27,7 @@ title:                 bolero2's Archieve
 description:           >
   # Hydejack is a boutique Jekyll theme for hackers, nerds, and academics,
   # with a focus on personal sites that are meant to impress.
-  Computer Vision is the best in my life totally.
+  컴퓨터 비전과 머신러닝/딥러닝 관련 기록들 
 
 # A shorter description for the sidebar.
 tagline:               ML/DL Researcher & Engineer, Especially Computer Vision
