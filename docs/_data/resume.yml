@@ -18,13 +18,30 @@ basics:
     In addition to Vision AI, I’m also interested in Computer Graphics and GPU-Accelerating technologies.
     (Open ACC, Open MP etc.)  
 
-    What I am currently interested in...   
-      * Machine Learning + Deep Learning
+    What I am currently interested in... >> 
+      * **Machine Learning + Deep Learning**
+        * Unsupervised Learning (Clustering, GAN...)
+        * Semantic/Instance Segmentation
+        * XAI
+        * etc.
       * Computer Vision + Image Processing
       * Mathematics (Calculus + Linear Algebra)
       * Computer Graphics
       * GPU Accelerating Tech.
-      * (Android + iOS development)
+      * (I have experience about Android development.)
+
+    And I can do DevOps >>
+      * Docker
+      * Kubernetes
+      * FastAPI + Nginx
+      * MongoDB
+
+    I prefer this development environment >>
+      * Linux OS
+      * vim
+      * Visual Studio Code
+      * Macbook Pro 14' (m1 max)
+
 
 # Open `_data/resume.yml` to edit this text.
   location:
@@ -60,7 +77,7 @@ work:
     startDate: "2021-03-01"
     endDate: "2022-08-31"
     summary: >
-      aa
+      1. MLOps를 위한 Model Serving
     highlights:
       - a
       - b
