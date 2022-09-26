@@ -1,0 +1,101 @@
+I"3<h1 id="whats-new-in-hydejack-91">What’s New in Hydejack 9.1?</h1>
+
+<p>What’s New in Hydejack 9.1?</p>
+
+<ul id="markdown-toc">
+  <li><a href="#whats-new-in-hydejack-91" id="markdown-toc-whats-new-in-hydejack-91">What’s New in Hydejack 9.1?</a>    <ul>
+      <li><a href="#stripe-ified-design" id="markdown-toc-stripe-ified-design">Stripe-ified Design</a></li>
+      <li><a href="#inverted-sidebars" id="markdown-toc-inverted-sidebars">Inverted Sidebars</a></li>
+      <li><a href="#code-block-headers" id="markdown-toc-code-block-headers">Code Block Headers</a></li>
+      <li><a href="#resume-download-buttons" id="markdown-toc-resume-download-buttons">Resume Download Buttons</a></li>
+      <li><a href="#serp-breadcrumbs" id="markdown-toc-serp-breadcrumbs"><abbr title="Search Engine Results Page">SERP</abbr> Breadcrumbs</a></li>
+      <li><a href="#last-modified-at" id="markdown-toc-last-modified-at">Last Modified At</a></li>
+      <li><a href="#clap-button-preview" id="markdown-toc-clap-button-preview">Clap Button Preview</a></li>
+      <li><a href="#credits" id="markdown-toc-credits">Credits</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="stripe-ified-design">Stripe-ified Design</h2>
+<p>Most elements now have rounded borders, making the design look more modern (dare I say “Stripe-ified”) than ever before.</p>
+
+<p>The goal of Hydejack was always to provide a theme that looks “designed” combined the amenities of a typical Jekyll theme for coders.
+This is an important step in maintaining this goal.</p>
+
+<p>At the same time, I’m introducing nerdy elements like <a href="#serp-breadcrumbs">breadcrumbs</a>, that are almost ornamental in nature.
+You wouldn’t find these on other Stripe-like designs, but I think they are appealing to developer types like myself. 
+Like most additions to Hydejack, they can be disabled via configuration.</p>
+
+<h2 id="inverted-sidebars">Inverted Sidebars</h2>
+<p>The colors on the sidebar can now be inverted to allow brighter sidebar images. This can be enabled per-page in the fort matter:</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">invert_sidebar</span><span class="pi">:</span> <span class="no">true</span>
+</code></pre></div></div>
+
+<h2 id="code-block-headers">Code Block Headers</h2>
+<p>Code blocks can now have headers:</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// file: 'hello-world.js'</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Hello World!</span><span class="dl">'</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Headers are added by making the first line a comment of the form <code class="language-plaintext highlighter-rouge">(file|title): ['"].*['"]</code>, e.g.:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>~~~js
+// file: 'hello-world.js'
+console.log('Hello World!');
+~~~
+</code></pre></div></div>
+
+<p>Code blocks with and without headers now also come with a copy button. 
+In the case of header-less code blocks, the button only shows on hover to prevent potential overlap.</p>
+
+<h2 id="resume-download-buttons">Resume Download Buttons</h2>
+<p>Resumes can now have download buttons:</p>
+
+<p><img src="/assets/img/blog/9.1.0-3.png" alt="Download Buttons" class="border lead" width="1776" height="258" loading="lazy" /></p>
+
+<p class="figcaption">Resumes can now have download buttons.</p>
+
+<p>The documentation has been updated with a chapter on <a href="/docs/basics/#downloads">how to configure the buttons</a>.</p>
+
+<h2 id="serp-breadcrumbs"><abbr title="Search Engine Results Page">SERP</abbr> Breadcrumbs</h2>
+<p>Added breadcrumbs above page title:</p>
+
+<p><img src="/assets/img/blog/9.1.0-2.png" alt="Breadcrumbs" class="border lead" width="1588" height="164" loading="lazy" /></p>
+
+<p class="figcaption">Bread crumbs are now shown above each page title.</p>
+
+<p>Note that this requires a <a href="https://qwtel.com/posts/software/urls-are-directories/">directory-like URL structure</a> on your entire site, 
+otherwise the intermediate links will point to nonexisting sites.</p>
+
+<p>On a side note, Hydejack now has built-in tooltips for abbreviations like <abbr title="Search Engine Results Page">SERP</abbr> (activated via tap/click).
+See <a href="/blog/hyde/2012-02-07-example-content/#inline-html-elements">Example Content</a> on how to add them to your content.</p>
+
+<h2 id="last-modified-at">Last Modified At</h2>
+<p>Blog posts can now have a “last modified at” date in the sub title row.</p>
+
+<p><img src="/assets/img/blog/9.1.0-1.png" alt="Last modified at" class="border lead" width="1254" height="218" loading="lazy" /></p>
+
+<p>Note that this depends on the <code class="language-plaintext highlighter-rouge">last_modified_at</code> property of the page, which must be either set manually in the frontmatter (not recommended), or via a plugin like <a href="https://github.com/gjtorikian/jekyll-last-modified-at"><code class="language-plaintext highlighter-rouge">jekyll-last-modified-at</code></a>. Note that the later is not available when building on GitHub Pages and can increase build times.</p>
+
+<h2 id="clap-button-preview">Clap Button Preview</h2>
+<p>I’ve been trying something new with <a href="https://getclaps.app/"><strong>getclaps.app</strong></a>, a feedback and analytics tool for personal sites like those powered by Hydejack.</p>
+
+<!-- <clap-button style="--clap-button-color:var(--body-color);margin:2rem auto 3rem;width:3rem;height:3rem;font-size:smaller" nowave></clap-button> -->
+
+<p>It is a separate product from Hydejack and not enabled by default. Because it depends on a backend component, it requires a monthly fee. 
+If enabled, it is placed below posts and pages where the dingbat character (❖) used to be.</p>
+
+<p>I can’t claim that this product is fully baked (feedback welcome), but I’ve been using it on my personal site and here for the last couple of months with no issues.
+For more, see <a href="https://getclaps.app/">the dedicated website</a>.</p>
+
+<hr style="margin:2rem 0" />
+
+<p>There are many more changes and bugfixes in 9.1. See the <a href="/CHANGELOG/" class="heading flip-title">CHANGELOG</a> for details.</p>
+
+<h2 id="credits">Credits</h2>
+
+<p><span>Photo by <a href="https://unsplash.com/@jjying?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">JJ Ying</a> on <a href="https://unsplash.com/?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span></p>
+
+:ET
