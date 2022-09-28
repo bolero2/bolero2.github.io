@@ -41,7 +41,7 @@ NMS란? Non-maximum Suppression의 약자로써, **비최대 억제 알고리즘
 ### 1-2. IoU?
 
 IoU는 **Intersection Over Union**의 약자이다.
-![iou.png](https://images.velog.io/images/bolero2/post/93cd3e8c-b77f-4de9-a3f4-d7683c4e6838/iou.png)
+![iou.jpg]('../../assets/img/posts/iou.jpg)
 
 (Object Detection 을 다뤄본 개발자라면 많이 접해봤을 듯한 그림.)
 
@@ -129,7 +129,7 @@ boxes = [
 
 해당 박스들을 600 * 600의 빈 캔버스에 그려보면, 다음과 같은 박스를 볼 수 있다.
 
-![before_nms.jpg](https://images.velog.io/images/bolero2/post/c166b00b-67ec-4c8c-a644-40a47109769e/before_nms.jpg)
+![before_nms.jpg]('../../assets/img/posts/before_nms.jpg)
 
 **(박스 그려주는 코드)**
 ```python

@@ -29,7 +29,7 @@ Java 보다는 C++와 Python을 주로 썼었다.
 우선, 어떠한 서버가 있고 거기에 AccessKey와 Image를 보내야 한다.
 간단하게 Postman 으로 테스트를 해볼 수 있다.
 
-![](https://velog.velcdn.com/cloudflare/bolero2/2d07c10a-cfd3-49b2-a8ea-251bfe794aa1/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202022-04-06%2006.04.20.png)
+![](../assets/img/posts/postman_scrshot.png)
 
 이렇게 POST method로 https://staging.server.com/api/inference/target 위치로 
 ```python
@@ -82,13 +82,13 @@ files = "bird.jpg"
 Swagger 라든지, DevTools(개발자 도구, 요소 점검) 라든지, 어떠한 방식으로든 웹페이지에서 헤더 정보를 확인할 수 있다.
 필자는 개발자 도구를 사용해서 웹페이지에서 직접 헤더를 확인하였다.
 
-![회사 제품.jpg](https://velog.velcdn.com/cloudflare/bolero2/bd9a5013-08e5-4cf4-bb94-54a8d05c391e/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202022-04-06%2006.18.57.png)
+![neuralworks.png](../assets/img/posts/neuralworks_scrshot.png)
 
 **이렇게 개발자 도구를 열고, 네트워크 탭 - XHR/Fetch 항목으로 들어가면 [요청, 응답, 요청 데이터] 등을 확인할 수 있다.**
 그리고 저기의 Content-Type, Accept-Language 등이 우리가 Connection을 할 때 설정해야 할 헤더 및 Key 정보들이다.
 
 아래로 더 내리면 요청 데이터 항목이 있다.
-![](https://velog.velcdn.com/cloudflare/bolero2/1b1a7fd0-d4ee-4fe7-9e5d-fb74af163c35/image.png)
+![request.jpg](../assets/img/posts/request_data.png)
 
 유형은 `multipart/form-data` 이고, boundary는 `----WebKitFormBoundaryAYuewg7muT6zRKkc` 이다.
 
@@ -152,7 +152,7 @@ Content-Type: image/jpeg
 2. Send To Server 버튼으로 해당 이미지를 서버로 전송한다.
 
 화면 구성은 다음과 같다:
-![](https://velog.velcdn.com/cloudflare/bolero2/03bd1748-a0df-43a5-907c-393a27385be9/flow1.jpg)
+![](../assets/img/posts/android_display_setting.jpg)
 
 버튼 및 String, ImageView, TextView 관련해서는 이후에 포스팅을 하고,
 지금은 Http Request가 목적이므로 생략한다.
