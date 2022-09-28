@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "Apple Silicon(M1) 에 Anaconda & PyTorch 설치하기 + 성능 측정"
-date:   2022-09-27
-categories: ETC
+date:   2022-09-27 21:19:15 +0900
+categories: development
 ---
 # Apple Silicon에 PyTorch 설치하기
 

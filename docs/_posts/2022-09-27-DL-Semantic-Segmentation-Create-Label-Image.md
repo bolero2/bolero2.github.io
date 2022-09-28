@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "[DL] Semantic Segmentation에서 Label Image 생성하기"
-date:   2022-09-27
-categories: Deep Learning
+date:   2022-09-27 21:19:15 +0900
+categories: deep-learning
 ---
 # Semantic Segmentation에서 Label Image 생성하기
 

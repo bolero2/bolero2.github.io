@@ -1,8 +1,8 @@
 ---
 layout: post
 title:  "[Android/Java] HttpURLConnection으로 HTTP POST request하기"
-date:   2022-09-27
-categories: Android
+date:   2022-09-27 21:19:15 +0900
+categories: android
 ---
 # HttpURLConnection으로 HTTP POST request하기
 
