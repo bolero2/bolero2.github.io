@@ -2,7 +2,7 @@
 layout: post
 title:  "[Paper] Better plain ViT baselines for ImageNet-1k"
 date:   2022-09-27
-categories: Paper Review
+categories: "Paper Review"
 ---
 # Better  plain ViT baselines for ImageNet-1k
 

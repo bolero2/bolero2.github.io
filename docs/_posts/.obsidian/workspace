@@ -4,15 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "6dcf38e7cfcd3421",
+        "id": "5a42587bea22f3a7",
         "type": "leaf",
         "state": {
-          "type": "markdown",
-          "state": {
-            "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
-            "mode": "source",
-            "source": false
-          }
+          "type": "empty",
+          "state": {}
         }
       }
     ],
@@ -77,7 +73,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -94,7 +89,6 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -116,9 +110,7 @@
             "type": "leaf",
             "state": {
               "type": "outline",
-              "state": {
-                "file": "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md"
-              }
+              "state": {}
             }
           }
         ]
@@ -128,14 +120,14 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "6dcf38e7cfcd3421",
+  "active": "5a42587bea22f3a7",
   "lastOpenFiles": [
+    "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md",
     "2022-09-27-DL-Principle-of-NMS.md",
     "2022-09-27-DL-Semantic-Segmentation-Create-Label-Image.md",
     "2022-09-27-install-anaconda-pytorch-on-m1.md",
     "2022-09-27-Paper-Better-plain-ViT-baselines-for-ImageNet-1k.md",
     "2022-09-27-Paper-DETR-End-to-End-Object-Detection-with-Transformer.md",
-    "2022-09-27-Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching.md",
-    "2022-09-27-Android-HttpURLConnection-HTTP-POST-Request.md"
+    "2022-09-27-Paper-GA-Net-Guided-Aggregation-Net-for-End-to-end-Stereo-Matching.md"
   ]
 }

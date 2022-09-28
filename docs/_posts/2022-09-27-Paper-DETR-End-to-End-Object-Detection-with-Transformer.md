@@ -2,7 +2,6 @@
 layout: post
 title:  "[Paper] DETR - End-to-End Object Detection with Transformer"
 date: 2022-09-27
-categories: Paper Review
 ---
 # DETR - End-to-End Object Detection with Transformer
 
