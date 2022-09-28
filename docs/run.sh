@@ -4,5 +4,5 @@
 
 # => The current folder will be generated into ./_site
 # jekyll build
-
-bundle exec jekyll serve
+JEKYLL_ENV=production
+bundle exec jekyll serve 
