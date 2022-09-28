@@ -6,7 +6,8 @@ categories: deep-learning
 ---
 # Non-Maximum Suppression 파헤치기
 
-이번 포스팅에는
+이번 포스팅에서는 Object Detection 모델의 추론에서 많이 사용하는 NMS에 대해 살펴보고
+코드로 간략하게 구현해보도록 하자.
 
 ## 0. Intro
 

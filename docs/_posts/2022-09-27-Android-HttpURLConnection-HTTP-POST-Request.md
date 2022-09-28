@@ -6,6 +6,11 @@ categories: android
 ---
 # HttpURLConnection으로 HTTP POST request하기
 
+Android 개발 시에, 어떤 외부 서버로 현재 안드로이드의 데이터를 보내야 할 일이 있다면?
+HttpURLConnection으로 외부 서버와 POST 통신을 수행해야 한다.
+
+이번 포스팅에서는 해당 방법에 대해 알아보도록 하자.
+
 ## 0. Intro
 
 필자 회사의 추론 서버(Inference Server)로 이미지를 **POST** 요청해서 응답을 받아오는
