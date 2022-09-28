@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[Paper] DETR - End-to-End Object Detection with Transformer"
+title:  "[Paper Review] DETR - End-to-End Object Detection with Transformer"
 date: 2022-09-27 11:07:00 +0900
 categories: paper-review
 ---
@@ -121,13 +121,13 @@ Ground-Truth 쪽에 2개의 (no object)를 만들어줍니다.
 
 실험 조건은 다음과 같습니다:  
 
-|Item|Content|
-|:--------:|:--------:|
-|Comparison Network|Faster-RCNN|
-|Optimizer|AdamW|
-|Backbone|ResNet-50, ResNet-101|
-|Epoch|300|
-|Dataset|COCO 2017|
+|        Item        |        Content        |
+| :----------------: | :-------------------: |
+| Comparison Network |      Faster-RCNN      |
+|     Optimizer      |         AdamW         |
+|      Backbone      | ResNet-50, ResNet-101 |
+|       Epoch        |          300          |
+|      Dataset       |       COCO 2017       |
 
 실험에 사용된 Dataset은 [COCO 2017](https://cocodataset.org/#home)의 detection + segmentation 데이터 세트 입니다.  
 Segmentation은 Panoptic Segmentation의 성능 측정을 위해 사용하였습니다.  

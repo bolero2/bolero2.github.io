@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[DL] NMS, Non-Maximum Suppression 파헤치기"
+title:  "NMS, Non-Maximum Suppression 파헤치기"
 date:   2022-09-27 21:19:15 +0900
 categories: deep-learning
 ---

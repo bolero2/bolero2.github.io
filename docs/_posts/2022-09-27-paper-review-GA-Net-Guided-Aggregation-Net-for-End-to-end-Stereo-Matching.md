@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "[Paper] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching"
+title:  "[Paper Review] GA-Net: Guided Aggregation Net for End-to-end Stereo Matching"
 date:   2022-09-27
 categories: paper-review
 ---
