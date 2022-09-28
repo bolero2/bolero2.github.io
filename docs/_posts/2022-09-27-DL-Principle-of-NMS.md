@@ -5,6 +5,9 @@ date:   2022-09-27 21:19:15 +0900
 categories: deep-learning
 ---
 # Non-Maximum Suppression 파헤치기
+
+이번 포스팅에는
+
 ## 0. Intro
 
 NMS란? Non-maximum Suppression의 약자로써, **비최대 억제 알고리즘**으로 생각하면 된다.
