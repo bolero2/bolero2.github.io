@@ -113,12 +113,8 @@ work:
       and while working on various projects, I gained various experiences such as efficient evaluation methods, using streamlit, building and improving CVAT, and EC2 deployment.
     hightlights:
       - "1. AI Model Training and Deployment"
-        - "Developed and deployed AI models to be used in the ITS (Intelligent Transportation System)."
-        - "Efficiently managed data using AWS Lambda, Gluejob, Athena query, etc."
-        - "Took a DataOps approach, such as improving the labeling guideline document to pay attention to data quality."
       - "2. MLOps System Development"
-        - "Built an efficient MLOps system by building Kubernetes and Kubeflow Pipeline entirely on-premise."
-        - "While working on various projects, I gained various experiences such as efficient evaluation methods, using streamlit, building and improving CVAT, and EC2 deployment."
+      - "3. DataOps System Development"
 # volunteer:
 #   - organization: "CoderDojo"
 #     position: "Teacher"
