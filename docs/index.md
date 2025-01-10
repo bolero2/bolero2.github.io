@@ -1,6 +1,6 @@
 ---
-layout: blog
+layout: post
 title: blog
-sitemap: true 
+sitemap: true
 ---
 
